@@ -1,4 +1,5 @@
 import express from 'express'
+import session from 'express-session'
 import User from '../models/user'
 const router = express.Router();
 
@@ -14,6 +15,9 @@ router.post( '/login', ( req, res ) => {
 			res.send( { data: err } );
 		} else {
 			if ( foundUser ) {
+				req.session.username = username;
+				req.session.loginDate = Date.now();
+				req.session.userId = foundUser._id;
 				res.send( {
 					data: 'User and password accepted!'
 				} );
