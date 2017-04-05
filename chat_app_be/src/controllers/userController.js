@@ -34,19 +34,33 @@ router.post( '/register', ( req, res ) => {
 	const username = req.body.username,
 		  password = req.body.password;
 
-	var newUser = new User( {
-		username: username,
-		password: password
-	} );
-
-	newUser.save( ( err ) => {
+	User.findOne( {
+		username: username
+	}, ( err, foundUser ) => {
 		if ( err ) {
-			res.send( { 
-				data: err
+			res.send( {
+				data: err 
+			} );
+		} else if ( foundUser ) {
+			res.send( {
+				data: 'Username already in use!'
 			} );
 		} else {
-			res.send( { 
-				data: 'User successfully created!'
+			var newUser = new User( {
+				username: username,
+				password: password
+			} );
+
+			newUser.save( ( err ) => {
+				if ( err ) {
+					res.send( { 
+						data: err
+					} );
+				} else {
+					res.send( { 
+						data: 'User successfully created!'
+					} );
+				}
 			} );
 		}
 	} );
