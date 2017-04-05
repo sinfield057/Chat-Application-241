@@ -18,8 +18,17 @@ router.post( '/login', ( req, res ) => {
 				req.session.username = username;
 				req.session.loginDate = Date.now();
 				req.session.userId = foundUser._id;
-				res.send( {
-					data: 'User and password accepted!'
+				foundUser.lastLogin = Date.now();
+				foundUser.save( ( err ) => {
+					if ( err ) {
+						res.send( {
+							data: 'Error at login: ' + err
+						} );
+					} else {
+						res.send( {
+							data: 'User and password accepted!'
+						} );
+					}
 				} );
 			} else {
 				res.send( {
@@ -48,7 +57,9 @@ router.post( '/register', ( req, res ) => {
 		} else {
 			var newUser = new User( {
 				username: username,
-				password: password
+				password: password,
+				createdAt: Date.now(),
+				lastLogin: Date.now()
 			} );
 
 			newUser.save( ( err ) => {
