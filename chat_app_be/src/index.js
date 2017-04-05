@@ -15,6 +15,7 @@ app.use( bodyParser.urlencoded( {
 	extended: true
 } ) );
 
+mongoose.Promise = global.Promise;
 mongoose.connect( 'mongodb://localhost', ( error ) => {
 	if ( error ) {
 		throw error;

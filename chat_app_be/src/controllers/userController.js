@@ -1,11 +1,13 @@
 import express from 'express'
 import session from 'express-session'
 import User from '../models/user'
+import md5 from 'md5'
 const router = express.Router();
 
 router.post( '/login', ( req, res ) => {
+	console.log( md5 );
 	const username = req.body.username,
-		  password = req.body.password;
+		  password = md5( req.body.password );
 
 	User.findOne( { 
 		username: username,
@@ -41,7 +43,7 @@ router.post( '/login', ( req, res ) => {
 
 router.post( '/register', ( req, res ) => {
 	const username = req.body.username,
-		  password = req.body.password;
+		  password = md5( req.body.password );
 
 	User.findOne( {
 		username: username
