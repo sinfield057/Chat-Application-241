@@ -17,6 +17,7 @@
 
 <script>
 import axios from 'axios'
+import router from '../router'
 
 export default {
   name: 'home',
@@ -25,7 +26,7 @@ export default {
       return {
         username: '',
         password: '',
-        data: 'Aici o sa apara raspunsul de la API'
+        data: ''
       }
   },
   
@@ -40,6 +41,7 @@ export default {
           })
            .then( ( response ) => {
             self.data = response.data.data;
+            router.push('/main');
            })
            .catch( ( err ) => {
             self.data = 'Error: ' + err;

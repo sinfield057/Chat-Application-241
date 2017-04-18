@@ -24,17 +24,20 @@ router.post( '/login', ( req, res ) => {
 				foundUser.save( ( err ) => {
 					if ( err ) {
 						res.send( {
-							data: 'Error at login: ' + err
+							data: 'Error at login: ' + err,
+							resolved: false
 						} );
 					} else {
 						res.send( {
-							data: 'User and password accepted!'
+							data: 'User and password accepted!',
+							resolved: true
 						} );
 					}
 				} );
 			} else {
 				res.send( {
-					data: 'User and/or password invalid!'
+					data: 'User and/or password invalid!',
+					resolved: false
 				} );
 			}
 		}
@@ -50,11 +53,13 @@ router.post( '/register', ( req, res ) => {
 	}, ( err, foundUser ) => {
 		if ( err ) {
 			res.send( {
-				data: err 
+				data: err,
+				resolved: false
 			} );
 		} else if ( foundUser ) {
 			res.send( {
-				data: 'Username already in use!'
+				data: 'Username already in use!',
+				resolved: false
 			} );
 		} else {
 			var newUser = new User( {
@@ -67,11 +72,13 @@ router.post( '/register', ( req, res ) => {
 			newUser.save( ( err ) => {
 				if ( err ) {
 					res.send( { 
-						data: err
+						data: err,
+						resolved: false
 					} );
 				} else {
 					res.send( { 
-						data: 'User successfully created!'
+						data: 'User successfully created!',
+						resolved: true
 					} );
 				}
 			} );
