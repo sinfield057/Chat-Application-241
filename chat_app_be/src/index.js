@@ -41,6 +41,9 @@ console.log( 'Sessions loaded...' );
 
 app.use( express.static( __dirname + '/../public') );
 app.use( '/api/', require( './controllers' ) );
+app.get( '*', ( req, res ) => {
+	res.redirect( '/' ); 
+} );
 console.log( 'Modules loaded...' );
 
 app.listen( 8000, () => {
