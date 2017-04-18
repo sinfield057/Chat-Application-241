@@ -18,6 +18,7 @@
 <script>
 import axios from 'axios'
 import router from '../router'
+import session from 'vue-cookie'
 
 export default {
   name: 'home',
@@ -26,6 +27,7 @@ export default {
       return {
         username: '',
         password: '',
+        sessionValid: false,
         data: ''
       }
   },
@@ -41,7 +43,9 @@ export default {
           })
            .then( ( response ) => {
             self.data = response.data.data;
-            router.push('/main');
+            if ( response.data.resolved == true ) {
+              router.push('/main');   
+            }
            })
            .catch( ( err ) => {
             self.data = 'Error: ' + err;
@@ -61,8 +65,22 @@ export default {
            .catch( ( err ) => {
             self.data = 'Error: ' + err;
            });
+    },
+
+    checkSession() {
+      const self = this;
+
+      axios.get( '/api/user/validate' )
+           .then( ( response ) => {
+              if ( response.data.resolved == true) {
+                router.push( '/main' );
+              }
+           })
     }
 
   },
+  beforeMount() {
+    this.checkSession();
+  }
 }
 </script>

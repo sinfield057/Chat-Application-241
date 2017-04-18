@@ -1,5 +1,5 @@
 <template>
 	<div class="main">
-		<h1>You are logged in</h1>		
+		<h1>Main page tbh fam</h1>		
 	</div>
 </template>

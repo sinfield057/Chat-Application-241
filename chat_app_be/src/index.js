@@ -33,6 +33,7 @@ app.use( session( {
 		maxAge: 60000 * 20,
 		secure: false
 	},
+	name: 'Chat App',
 	resave: true,
 	saveUninitialized: true
 } ) );

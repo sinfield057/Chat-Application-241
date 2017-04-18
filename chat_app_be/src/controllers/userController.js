@@ -86,4 +86,29 @@ router.post( '/register', ( req, res ) => {
 	} );
 } );
 
+router.get( '/validate', ( req, res ) => {
+	const username = req.session.username,
+		  userId   = req.session.userId;
+
+	User.findOne( { 
+		_id: userId
+	}, ( err, foundUser ) => {
+		if ( err ) {
+			res.send( {
+				resolved: false
+			} );
+		} else {
+			if ( foundUser && foundUser.username == username) {
+				res.send( {
+					resolved: true
+				} );
+			} else {
+				res.send( {
+					resolved: false
+				} );
+			}
+		}
+	}) 
+} );
+
 module.exports = router;
