@@ -2,6 +2,7 @@ import express from 'express'
 import session from 'express-session'
 import User from '../models/user'
 import md5 from 'md5'
+import mongoose from 'mongoose'
 const router = express.Router();
 
 router.post( '/login', ( req, res ) => {
@@ -17,6 +18,7 @@ router.post( '/login', ( req, res ) => {
 			res.send( { data: err } );
 		} else {
 			if ( foundUser ) {
+				console.log( foundUser );
 				req.session.username = username;
 				req.session.loginDate = Date.now();
 				req.session.userId = foundUser._id;
@@ -44,6 +46,21 @@ router.post( '/login', ( req, res ) => {
 	});
 } );
 
+router.get( '/logout', ( req, res ) => {
+	req.session.destroy( ( err ) => {
+		if( err ) {
+			res.send( {
+				data: 'Failed to logout properly: ' + err,
+				resolved: false
+			} )
+		} else {
+			res.send( {
+				resolved: true
+			} )
+		}
+	} );
+} );
+
 router.post( '/register', ( req, res ) => {
 	const username = req.body.username,
 		  password = md5( req.body.password );
@@ -53,7 +70,7 @@ router.post( '/register', ( req, res ) => {
 	}, ( err, foundUser ) => {
 		if ( err ) {
 			res.send( {
-				data: err,
+				data: "Database Error: " + err,
 				resolved: false
 			} );
 		} else if ( foundUser ) {
@@ -63,6 +80,7 @@ router.post( '/register', ( req, res ) => {
 			} );
 		} else {
 			var newUser = new User( {
+				_id: mongoose.mongo.ObjectId(),
 				username: username,
 				password: password,
 				createdAt: Date.now(),
@@ -72,7 +90,7 @@ router.post( '/register', ( req, res ) => {
 			newUser.save( ( err ) => {
 				if ( err ) {
 					res.send( { 
-						data: err,
+						data: "Database error while saving: " + err,
 						resolved: false
 					} );
 				} else {
@@ -100,11 +118,15 @@ router.get( '/validate', ( req, res ) => {
 		} else {
 			if ( foundUser && foundUser.username == username) {
 				res.send( {
-					resolved: true
+					resolved: true,
+					username: username,
+					userId: userId
 				} );
 			} else {
 				res.send( {
-					resolved: false
+					resolved: false,
+					username: username,
+					userId: userId
 				} );
 			}
 		}
