@@ -79,7 +79,7 @@ router.post( '/register', ( req, res ) => {
 				resolved: false
 			} );
 		} else {
-			var newUser = new User( {
+			const newUser = new User( {
 				_id: mongoose.mongo.ObjectId(),
 				username: username,
 				password: password,

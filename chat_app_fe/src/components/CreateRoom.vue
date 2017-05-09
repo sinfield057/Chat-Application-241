@@ -1,10 +1,11 @@
 <template>
-	<div class="main">
-		<h1>Welcome {{ username }}!</h1>
-		<p>Your userId is: {{ userId }}</p>
-		<p>{{ data }}</p>
+	<div class="createRoom">
+		<h1>Create Room</h1>
+		<input type="text" name="room-name" placeholder="Enter room name" v-model="name">
+		<textarea name="create-room-button" v-model="description"></textarea>
+		<input type="button" name="create-room" value="Create room" @click="createRoom">
 		<input type="button" name="logout-button" value="Logout" @click="logout">	
-		<router-link :to=" 'createRoom' ">Create Room</router-link>
+		<router-link :to=" 'main' ">Back to main</router-link>
 	</div>
 </template>
 
@@ -14,14 +15,16 @@ import router from '../router'
 import session from 'vue-cookie'
 
 export default {
-	name: 'main',
+	name: 'createRoom',
 
 	data() {
 		return {
 			username: '',
 			sessionValid: false,
 			userId: '',
-			data: ''
+			data: '',
+			name: '',
+			description: ''
 		}
 	},
 
@@ -54,6 +57,25 @@ export default {
 	              }
 	           } );
 	    },
+
+	    createRoom() {
+	    	const self = this;
+
+	    	axios.post( '/api/room/createRoom', {
+	    		userId: self.userId,
+	    		name: self.name,
+	    		description: self.description
+	    	} )
+	    	.then( ( response ) => {
+	    		if( response.data.resolved ) {
+	    			self.data = response.data.data;
+	    		} else {
+	    			self.data = response.data.data;
+	    		}
+	    	} );
+	    }
+
+	    
 	},
 
 	beforeMount() {
