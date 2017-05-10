@@ -6,7 +6,6 @@ import mongoose from 'mongoose'
 const router = express.Router();
 
 router.post( '/login', ( req, res ) => {
-	console.log( md5 );
 	const username = req.body.username,
 		  password = md5( req.body.password );
 
@@ -18,7 +17,6 @@ router.post( '/login', ( req, res ) => {
 			res.send( { data: err } );
 		} else {
 			if ( foundUser ) {
-				console.log( foundUser );
 				req.session.username = username;
 				req.session.loginDate = Date.now();
 				req.session.userId = foundUser._id;

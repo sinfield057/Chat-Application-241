@@ -51,7 +51,22 @@ router.post( '/createRoom' , ( req, res ) => {
 	} ); 
 } );
 
-router.get( '/availableRooms', ( req, res ) => {
+router.get( '/getRooms', ( req, res ) => {
+	const userId = req.session.userId;
+
+	Room.find( {}, ( err, rooms ) => {
+		if( err ) {
+			res.send( {
+				data: "Error retrieving rooms: " + err,
+				resolved: false
+			} );
+		} else {
+			res.send( {
+				data: rooms,
+				resolved: true
+			} );
+		}
+	} );
 
 } );
 

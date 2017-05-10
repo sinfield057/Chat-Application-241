@@ -28,7 +28,8 @@ export default {
         username: '',
         password: '',
         sessionValid: false,
-        data: ''
+        data: '',
+        moderatedRooms: []
       }
   },
   
@@ -72,11 +73,11 @@ export default {
 
       axios.get( '/api/user/validate' )
            .then( ( response ) => {
-              if ( response.data.resolved == true) {
+              if ( response.data.resolved == true ) {
                 router.push( '/main' );
               }
-           })
-    }
+           } );
+    },
 
   },
   beforeMount() {

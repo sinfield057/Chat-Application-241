@@ -69,6 +69,7 @@ export default {
 	    	.then( ( response ) => {
 	    		if( response.data.resolved ) {
 	    			self.data = response.data.data;
+	    			router.push( '/main' );
 	    		} else {
 	    			self.data = response.data.data;
 	    		}
