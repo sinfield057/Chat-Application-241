@@ -4,13 +4,30 @@
 		<p>Your userId is: {{ userId }}</p>
 		<br />
 		<p>Moderated Rooms</p>
-		<ul id="moderated-rooms">
+		<ul id="moderated-rooms" class="room-list">
 			<li v-for="room in moderatedRooms">
-				<p>{{ room.name }}</p>
-				<p>{{ room.description }}</p>
-				<p>{{ room.createdAt }}</p>
+				<room-card :room="room"></room-card>
 			</li>
 		</ul>
+		<br />
+		<br />
+
+		<p>Joined Rooms</p>
+		<ul id="joined-rooms" class="room-list">
+			<li v-for="room in joinedRooms">
+				<room-card :room="room"></room-card>
+			</li>
+		</ul>
+		<br />
+		<br />
+
+		<p>Available Rooms</p>
+		<ul id="available-rooms" class="room-list">
+			<li v-for="room in availableRooms">
+				<room-card :room="room"></room-card>
+			</li>
+		</ul>
+
 		<input type="button" name="logout-button" value="Logout" @click="logout">	
 		<router-link :to=" 'createRoom' ">Create Room</router-link>
 	</div>
@@ -20,9 +37,14 @@
 import axios from 'axios'
 import router from '../router'
 import session from 'vue-cookie'
+import RoomCard from './subcomponents/RoomCard'
 
 export default {
 	name: 'main',
+
+	components: {
+		'room-card': RoomCard
+	},
 
 	data() {
 		return {
@@ -82,7 +104,21 @@ export default {
 	computed: {
 		moderatedRooms: function() {
 			return this.rooms.filter( ( room ) => {
-				return room.admin === this.userId;
+				return room.admin == this.userId;
+			} );
+		},
+
+		joinedRooms: function() {
+			return this.rooms.filter( ( room ) => {
+				return room.admin != this.userId &&
+					   room.users.indexOf( this.userId ) != -1;
+			} );
+		},
+
+		availableRooms: function() {
+			return this.rooms.filter( ( room ) => {
+				return room.admin != this.userId &&
+					   room.users.indexOf( this.userId ) == -1;
 			} );
 		}
 
@@ -95,3 +131,9 @@ export default {
 }
 	
 </script>
+
+<style>
+	.room-list {
+		list-style: none;
+	}
+</style>
