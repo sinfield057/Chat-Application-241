@@ -11,62 +11,80 @@ router.post( '/createRoom' , ( req, res ) => {
 		  name   	  = req.body.name,
 		  description = req.body.description;
 
-	Room.findOne( {
-		name: name 
-	}, ( err, foundRoom ) => {
-		if ( err ) {
-			res.send( {
-				data: "Database Error: " + err,
-				resolved: false
-			} );
-		} else if ( foundRoom ) {
-			res.send( {
-				data: 'Room name already in use!',
-				resolved: false
-			} );
-		} else {
-			const newRoom = new Room( {
-				_id: mongoose.mongo.ObjectId(),
-				name: name,
-				description: description,
-				admin: userId,
-				users: [ userId ],
-				createdAt: Date.now()
-			} );
+	if ( userID == req.session.userID ) {
 
-			newRoom.save( ( err ) => {
-				if ( err ) {
-					res.send( {
-						data: "Error creating room: " + err,
-						resolved: false 
-					} );
-				} else {
-					res.send( {
-						data: "Room successfully created!",
-						resolved: true
-					} );
-				}
-			} );
-		}
-	} ); 
+		Room.findOne( {
+			name: name 
+		}, 
+		( err, foundRoom ) => {
+			if ( err ) {
+				res.send( {
+					data: "Database Error: " + err,
+					resolved: false
+				} );
+			} else if ( foundRoom ) {
+				res.send( {
+					data: 'Room name already in use!',
+					resolved: false
+				} );
+			} else {
+				const newRoom = new Room( {
+					_id: mongoose.mongo.ObjectId(),
+					name: name,
+					description: description,
+					admin: userId,
+					users: [ userId ],
+					createdAt: Date.now()
+				} );
+
+				newRoom.save( ( err ) => {
+					if ( err ) {
+						res.send( {
+							data: "Error creating room: " + err,
+							resolved: false 
+						} );
+					} else {
+						res.send( {
+							data: "Room successfully created!",
+							resolved: true
+						} );
+					}
+				} );
+			}
+		} ); 
+	} else {
+		res.send( {
+			data: "Invalid session",
+			resolved: false
+		} );
+	}
 } );
 
 router.get( '/getRooms', ( req, res ) => {
 	const userId = req.session.userId;
-
-	Room.find( {}, ( err, rooms ) => {
-		if( err ) {
-			res.send( {
-				data: "Error retrieving rooms: " + err,
-				resolved: false
-			} );
-		} else {
-			res.send( {
-				data: rooms,
-				resolved: true
-			} );
-		}
-	} );
+	
+	if( typeof userId !== 'undefined' ) {
+		Room.find( {}, 
+				   '_id name description users admin createdAt', 
+		( err, rooms ) => {
+			if( err ) {
+				res.send( {
+					data: "Error retrieving rooms: " + err,
+					resolved: false
+				} );
+			} else {
+				res.send( {
+					data: rooms,
+					resolved: true
+				} );
+			}
+		} );
+	} else {
+		res.send( {
+			data: "Invalid session",
+			resolved: false
+		} );
+	}
 
 } );
 

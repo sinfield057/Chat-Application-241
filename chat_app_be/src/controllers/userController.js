@@ -12,9 +12,12 @@ router.post( '/login', ( req, res ) => {
 	User.findOne( { 
 		username: username,
 		password: password
-	}, ( err, foundUser ) => {
+	}, 
+	( err, foundUser ) => {
 		if ( err ) {
-			res.send( { data: err } );
+			res.send( { 
+				data: err 
+			} );
 		} else {
 			if ( foundUser ) {
 				req.session.username = username;
@@ -45,16 +48,17 @@ router.post( '/login', ( req, res ) => {
 } );
 
 router.get( '/logout', ( req, res ) => {
-	req.session.destroy( ( err ) => {
+	req.session.destroy( 
+	( err ) => {
 		if( err ) {
 			res.send( {
 				data: 'Failed to logout properly: ' + err,
 				resolved: false
-			} )
+			} );
 		} else {
 			res.send( {
 				resolved: true
-			} )
+			} );
 		}
 	} );
 } );
@@ -65,7 +69,8 @@ router.post( '/register', ( req, res ) => {
 
 	User.findOne( {
 		username: username
-	}, ( err, foundUser ) => {
+	}, 
+	( err, foundUser ) => {
 		if ( err ) {
 			res.send( {
 				data: "Database Error: " + err,
@@ -85,7 +90,8 @@ router.post( '/register', ( req, res ) => {
 				lastLogin: Date.now()
 			} );
 
-			newUser.save( ( err ) => {
+			newUser.save( 
+			( err ) => {
 				if ( err ) {
 					res.send( { 
 						data: "Database error while saving: " + err,
@@ -108,7 +114,8 @@ router.get( '/validate', ( req, res ) => {
 
 	User.findOne( { 
 		_id: userId
-	}, ( err, foundUser ) => {
+	}, 
+	( err, foundUser ) => {
 		if ( err ) {
 			res.send( {
 				resolved: false
@@ -123,8 +130,6 @@ router.get( '/validate', ( req, res ) => {
 			} else {
 				res.send( {
 					resolved: false,
-					username: username,
-					userId: userId
 				} );
 			}
 		}
