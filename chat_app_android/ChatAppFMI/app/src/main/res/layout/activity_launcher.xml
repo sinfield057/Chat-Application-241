@@ -1,18 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.starter.chatappfmi.LauncherActivity">
+    android:layout_height="match_parent">
 
-    <TextView
+    <ImageView  android:id="@+id/launch_screen_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black"/>
+
+    <TextView   android:id="@+id/app_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_above="@+id/launch_screen_logo"
+        android:text="ChatApp v0.0.1"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:layout_centerHorizontal="true"/>
 
-</android.support.constraint.ConstraintLayout>
+    <ImageView
+        android:id="@+id/launch_screen_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@mipmap/ic_launcher_round"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="8dp"
+        android:contentDescription="Logo placeholder" />
+
+    <TextView   android:id="@+id/app_dev"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Dev Team"
+        android:textColor="@color/white"
+        android:textSize="16dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/launch_screen_logo"/>
+
+</RelativeLayout>
