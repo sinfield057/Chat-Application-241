@@ -3,7 +3,6 @@
 ```
 cd Chat-Application-241/chat_app_be
 npm install
-npm run build
 
 cd ../chat_app_fe
 npm install
