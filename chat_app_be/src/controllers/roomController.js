@@ -11,7 +11,7 @@ router.post( '/createRoom' , ( req, res ) => {
 		  name   	  = req.body.name,
 		  description = req.body.description;
 
-	if ( userID == req.session.userID ) {
+	if ( userId == req.session.userId ) {
 
 		Room.findOne( {
 			name: name 
