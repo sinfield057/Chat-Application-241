@@ -1,10 +1,17 @@
 <template>
 	<div class="createRoom">
 		<h1>Create Room</h1>
+		<br />
+		<p>Room Name:</p>
 		<input type="text" name="room-name" placeholder="Enter room name" v-model="name">
+		<br />
+		<p>Room Description</p>
 		<textarea name="create-room-button" v-model="description"></textarea>
+		<br />
+		<br />
 		<input type="button" name="create-room" value="Create room" @click="createRoom">
-		<input type="button" name="logout-button" value="Logout" @click="logout">	
+<!-- 		<input type="button" name="logout-button" value="Logout" @click="logout">	 -->
+		<br />
 		<router-link :to=" 'main' ">Back to main</router-link>
 	</div>
 </template>
