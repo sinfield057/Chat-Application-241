@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">ChatAppFMI</string>
+    <string name="team_name">Team placeholder</string>
+    <string name="app_logo">logo.png</string>
+    <string name="web_link">http://placeholder.link/</string>
+    <string name="login_hint_username">Enter username / email</string>
+    <string name="login_hint_password">Enter password</string>
+    <string name="password_required_error_msg">You must enter a password</string>
+    <string name="username_required_error_msg">You must enter a valid username / email</string>
+    <string name="register_link_msg">Register now!</string>
+</resources>

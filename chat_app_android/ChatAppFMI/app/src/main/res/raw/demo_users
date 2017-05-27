@@ -1,0 +1,8 @@
+{
+  "demo_user": {
+    "id":0,
+    "email":"test@mail.com",
+    "password":"32250170a0dca92d53ec9624f336ca24",
+    "nickname":"TestAccount1"
+  }
+}
