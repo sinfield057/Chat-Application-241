@@ -1,6 +1,7 @@
 <template>
   <div class="home">
-  	
+  	<img src="../assets/logo2.png" id="logo">
+
     <h1>Chat App</h1>
 
     <input type="text" name="username" placeholder="Username" v-model="username">
@@ -54,18 +55,7 @@ export default {
     },
 
     doRegister() {
-      const self = this;
-
-      axios.post( '/api/user/register', {
-            username: self.username,
-            password: self.password
-          })
-           .then( ( response ) => {
-            self.data = response.data.data;
-           })
-           .catch( ( err ) => {
-            self.data = 'Error: ' + err;
-           });
+      router.push('/register');
     },
 
     checkSession() {
