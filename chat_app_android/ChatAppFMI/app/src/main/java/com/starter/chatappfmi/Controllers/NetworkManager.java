@@ -64,7 +64,7 @@ public class NetworkManager {
 
     public enum ResponseType {
         //TODO maybe add more responseTypes
-        LAUNCHER_DATA, USER, ERROR
+        LAUNCHER_DATA, USER, ROOM_RETRIEVAL, ERROR
     }
     //endregion
 
@@ -89,8 +89,9 @@ public class NetworkManager {
         return mInstance;
     }
 
-    public void setNetworkListener(NetworkListener listener) {
+    public NetworkManager setNetworkListener(NetworkListener listener) {
         mCallback = listener;
+        return this;
     }
 
     public void setContext(Context context) {
@@ -99,17 +100,23 @@ public class NetworkManager {
 
     //region LAUNCHER_DATA REQUESTS
     public void loadLauncherData() {
-        if(ConstantUtils.DEMO_FLAG) {
-            loadDemoLauncherData();
-        } else {
-            loadLiveLauncherData();
+        if(NetworkStatus.APP_NAME == null ||
+                NetworkStatus.LOGO_URL == null ||
+                NetworkStatus.TEAM_NAME == null ||
+                NetworkStatus.EXTERNAL_LINK_URL == null) {
+            if (ConstantUtils.DEMO_FLAG) {
+                //TODO Create NetworkDemoHelper; make NDH request.
+                loadDemoLauncherData();
+            } else {
+                loadLiveLauncherData();
+            }
         }
     }
 
     private void loadDemoLauncherData() {
         try {
             JSONObject object = new JSONObject();
-            object.put("logo_url", "http://www.freepngimg.com/download/chat/3-2-chat-png-pic.png");
+            object.put("logo_url", ConstantUtils.DEMO_APP_LOGO);
             object.put("app_name", ConstantUtils.DEMO_APP_NAME);
             object.put("team_name", ConstantUtils.DEMO_APP_TEAM);
 
@@ -227,7 +234,7 @@ public class NetworkManager {
                 .build();
 
         Request request = new Request.Builder()
-                .url(ConstantUtils.LOGIN_URL)
+                .url(NetworkStatus.LOGIN_REQUEST_URL)
                 .post(body)
                 .build();
 
@@ -271,5 +278,55 @@ public class NetworkManager {
 
     //region REGISTER REQUESTS
     //TODO Reg Request.
+    //endregion
+
+    //region ROOM LIST REQUEST
+
+    public void getRoomList(Context context) {
+        if(ConstantUtils.DEMO_FLAG) {
+            //TODO implement DEMO response
+        } else {
+            mClient.newCall(
+                    new Request.Builder()
+                    .url(NetworkStatus.ROOM_REQUEST_URL)
+                    .build()
+            ).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    ResponseData<Error> responseData = new ResponseData<Error>();
+                    responseData.setCode(NetworkStatus.CONNECTION_ERROR);
+                    responseData.setDescription("Unable to connect to server. Check Internet connection");
+                    responseData.setResponse(new Error(e.getLocalizedMessage()));
+
+                    mCallback.onFailure(responseData, ResponseType.ROOM_RETRIEVAL);
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    try {
+                        JSONObject jsonResponse = new JSONObject(response.body().string());
+
+                        ResponseData<JSONObject> responseData = new ResponseData<JSONObject>();
+                        responseData.setCode(response.code());
+                        responseData.setResponse(jsonResponse);
+
+                        mCallback.onSuccess(responseData, ResponseType.ROOM_RETRIEVAL);
+                    } catch (JSONException e) {
+                        Log.e(TAG, "Error parsing server response: " + e.getLocalizedMessage() );
+
+                        Error error = new Error(e.getLocalizedMessage());
+
+                        ResponseData<Error> responseData = null;
+                        responseData = new ResponseData<Error>();
+                        responseData.setCode(response.code());
+                        responseData.setResponse(error);
+
+                        mCallback.onFailure(responseData, ResponseType.ERROR);
+                    }
+                }
+            });
+        }
+    }
+
     //endregion
 }

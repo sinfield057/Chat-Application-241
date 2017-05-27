@@ -3,37 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView  android:id="@+id/launch_screen_background"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/black"/>
-
-    <TextView   android:id="@+id/app_name"
+    <com.starter.chatappfmi.CustomViews.LogoView
+        android:id="@+id/logo_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/launch_screen_logo"
-        android:text="ChatApp v0.0.1"
-        android:textColor="@color/white"
-        android:textSize="24sp"
-        android:layout_centerHorizontal="true"/>
-
-    <ImageView
-        android:id="@+id/launch_screen_logo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@mipmap/ic_launcher_round"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="8dp"
-        android:contentDescription="Logo placeholder" />
-
-    <TextView   android:id="@+id/app_dev"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Dev Team"
-        android:textColor="@color/white"
-        android:textSize="16dp"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/launch_screen_logo"/>
+        android:layout_centerInParent="true"/>
 
 </RelativeLayout>

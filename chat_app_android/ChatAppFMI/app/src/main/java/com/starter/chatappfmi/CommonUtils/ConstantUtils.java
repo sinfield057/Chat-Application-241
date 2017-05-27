@@ -17,6 +17,7 @@ public final class ConstantUtils {
 
     //region DEMO_DATA
     public static final boolean DEMO_FLAG = true;
+    public static final String DEMO_APP_LOGO = "http://www.freepngimg.com/download/chat/3-2-chat-png-pic.png";
     public static final String DEMO_APP_NAME = "ChatApp v0.0.1";
     public static final String DEMO_APP_TEAM = "Dev Team";
     public static final long DEMO_WAIT = 2000;

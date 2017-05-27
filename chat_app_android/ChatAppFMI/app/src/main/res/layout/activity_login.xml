@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2017 Theme Dimension, a Mobile Web America, Inc. venture - ThemeDimension.com
+  -->
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.starter.chatappfmi.CustomViews.NavigationBar
+        android:id="@+id/nav_bar_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"/>
+
+    <com.starter.chatappfmi.CustomViews.LogoView
+        android:id="@+id/logo_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"/>
+
+    <com.starter.chatappfmi.CustomViews.SimpleInputField
+        android:id="@+id/simple_input_field_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/logo_view"
+        android:layout_margin="4dp"/>
+
+    <Button
+        android:id="@+id/login_button"
+        android:minWidth="150dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/simple_input_field_view"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="4dp"
+        android:text="Login"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        android:textAllCaps="false"/>
+
+    <TextView
+        android:id="@+id/register_link"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/login_button"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="4dp"
+        android:text="@string/register_link_msg"
+        android:textSize="15sp"/>
+
+
+</RelativeLayout>

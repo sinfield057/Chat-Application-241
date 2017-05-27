@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.starter.chatappfmi">
+          package="com.starter.chatappfmi">
 
     <uses-permission android:name="android.permission.INTERNET"/>
 
@@ -11,17 +11,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
-
         <activity
             android:name=".Activities.LauncherActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.MainActivity"/>
+        <activity android:name=".Activities.LoginActivity"/>
+        <activity android:name=".Activities.MainActivity">
+        </activity>
     </application>
 
 </manifest>

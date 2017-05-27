@@ -1,7 +1,8 @@
 package com.starter.chatappfmi.CustomViews;
 
 import android.content.Context;
-import android.support.constraint.ConstraintLayout;
+import android.support.annotation.Nullable;
+import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import com.starter.chatappfmi.R;
 
 public class NavigationBar extends LinearLayout {
+
     //region GLOBALS
     private Button mBurgerButton;
     private TextView mTitle;
@@ -18,6 +20,16 @@ public class NavigationBar extends LinearLayout {
 
     public NavigationBar(Context context) {
         super(context);
+        createView(context);
+    }
+
+    public NavigationBar(Context context, @Nullable AttributeSet attrs) {
+        super(context, attrs);
+        createView(context);
+    }
+
+    public NavigationBar(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
         createView(context);
     }
 
@@ -30,6 +42,7 @@ public class NavigationBar extends LinearLayout {
     }
 
     //region SETTERS
+
     public void setButtonListener(View.OnClickListener listener) {
         mBurgerButton.setOnClickListener(listener);
     }
@@ -41,5 +54,6 @@ public class NavigationBar extends LinearLayout {
     public void setTitle(String title) {
         mTitle.setText(title);
     }
+
     //endregion
 }

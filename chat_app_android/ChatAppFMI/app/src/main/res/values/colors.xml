@@ -4,5 +4,8 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="white">#ffff</color>
+    <color name="transparent">#0000</color>
     <color name="black">#000000</color>
+    <color name="message_bg_color">#d4e4f1</color>
+    <color name="message_bg_color_end">#e0ecf5</color>
 </resources>
