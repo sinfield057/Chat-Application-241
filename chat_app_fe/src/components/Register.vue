@@ -33,27 +33,44 @@ export default {
 	},
 
 	methods: {
+		doLogin() {
+      axios.post( '/api/user/login', {
+            username: this.username,
+            password: this.password
+          })
+           .then( ( response ) => {
+            this.data = response.data.data;
+            if ( response.data.resolved == true ) {
+              router.push('/main');   
+            }
+           })
+           .catch( ( err ) => {
+            this.data = 'Error: ' + err;
+           });
+    },
+
 		doRegister() {
-	      if( this.password == this.passwordRepeat ) {
-	      	axios.post( '/api/user/register', {
-	            username: this.username,
-	            password: this.password
-	          })
-	           .then( ( response ) => {
-	            this.data = response.data.data;
-	            if( response.data.resolved ) {
-	            	router.push( '/main' );
-	            }
-	           })
-	           .catch( ( err ) => {
-	            this.data = 'Error: ' + err;
-	           });
-	      } else {
-	      	this.data = "Passwords do not match!";
-	      	this.password = '';
-	      	this.passwordRepeat = '';
-	      }
-	    },
+			if ( this.password == this.passwordRepeat ) {
+				axios.post( '/api/user/register', {
+					username: this.username,
+					password: this.password
+				})
+				.then( ( response ) => {
+					this.data = response.data.data;
+					
+					if ( response.data.resolved ) {
+						this.doLogin();
+					}
+				})
+				.catch( ( err ) => {
+					this.data = 'Error: ' + err;
+				});
+			} else {
+				this.data = "Passwords do not match!";
+				this.password = '';
+				this.passwordRepeat = '';
+			}
+		},
 	}
 }
 </script>
