@@ -7,9 +7,10 @@ import mongoose from 'mongoose'
 const router = express.Router();
 
 router.post( '/createRoom' , ( req, res ) => {
-	const userId 	  = req.body.userId,
-		  name   	  = req.body.name,
-		  description = req.body.description;
+	const userId 	  	= req.body.userId,
+		  	name   	  	= req.body.name,
+		  	description = req.body.description,
+				isPublic 		= req.body.isPublic;
 
 	if ( userId == req.session.userId ) {
 
@@ -32,7 +33,7 @@ router.post( '/createRoom' , ( req, res ) => {
 					_id: mongoose.mongo.ObjectId(),
 					name: name,
 					description: description,
-					admin: userId,
+					admin: !isPublic ? userId : null,
 					users: [ userId ],
 					createdAt: Date.now()
 				} );

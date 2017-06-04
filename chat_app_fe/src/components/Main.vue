@@ -146,10 +146,11 @@ export default {
 		},
 
 		joinedRooms: function() {
-			return this.rooms.filter( ( room ) => {
-				return room.admin != this.userId &&
-					   room.users.indexOf( this.userId ) != -1;
-			} );
+			return this.rooms.filter((room) => {
+				if (~room.users.indexOf(this.userId)) {
+					return room.admin && room.admin == this.userId;
+				}
+			});
 		},
 
 		availableRooms: function() {
