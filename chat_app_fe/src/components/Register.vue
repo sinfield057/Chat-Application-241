@@ -34,21 +34,19 @@ export default {
 
 	methods: {
 		doRegister() {
-	      const self = this;
-
 	      if( this.password == this.passwordRepeat ) {
 	      	axios.post( '/api/user/register', {
-	            username: self.username,
-	            password: self.password
+	            username: this.username,
+	            password: this.password
 	          })
 	           .then( ( response ) => {
-	            self.data = response.data.data;
+	            this.data = response.data.data;
 	            if( response.data.resolved ) {
 	            	router.push( '/main' );
 	            }
 	           })
 	           .catch( ( err ) => {
-	            self.data = 'Error: ' + err;
+	            this.data = 'Error: ' + err;
 	           });
 	      } else {
 	      	this.data = "Passwords do not match!";

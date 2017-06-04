@@ -37,20 +37,18 @@ export default {
   methods: {
 
     doLogin() {
-      const self = this;
-
       axios.post( '/api/user/login', {
-            username: self.username,
-            password: self.password
+            username: this.username,
+            password: this.password
           })
            .then( ( response ) => {
-            self.data = response.data.data;
+            this.data = response.data.data;
             if ( response.data.resolved == true ) {
               router.push('/main');   
             }
            })
            .catch( ( err ) => {
-            self.data = 'Error: ' + err;
+            this.data = 'Error: ' + err;
            });
     },
 
@@ -59,8 +57,6 @@ export default {
     },
 
     checkSession() {
-      const self = this;
-
       axios.get( '/api/user/validate' )
            .then( ( response ) => {
               if ( response.data.resolved == true ) {
