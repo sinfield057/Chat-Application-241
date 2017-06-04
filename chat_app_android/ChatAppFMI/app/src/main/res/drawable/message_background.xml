@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2017 Theme Dimension, a Mobile Web America, Inc. venture - ThemeDimension.com
+  -->
+
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <corners android:radius="50dp"/>
+
+    <gradient
+        android:startColor="@color/message_bg_color"
+        android:endColor="@color/message_bg_color_end"
+        android:gradientRadius="99"
+        android:type="radial"/>
+
+    <padding
+        android:left="8dp"
+        android:right="8dp"
+        android:top="4dp"
+        android:bottom="4dp"/>
+
+</shape>
