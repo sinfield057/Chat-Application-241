@@ -13,7 +13,7 @@
 		<input type="button" v-if="moderatedRooms.length != 0" v-bind:value="toggleModeratedValue" @click="toggleModerated">
 		<div class="room-list">
 			<p v-if="moderatedRooms.length == 0">You aren't moderating any rooms!</p>
-			<ul id="moderated-rooms" v-bind:class="{ 'show': showModerated }">
+			<ul id="moderated-rooms" v-bind:class="{ 'hide': hideModerated }">
 				<li v-for="room in moderatedRooms">
 					<room-card :room="room"></room-card>
 					<p>Requests: </p>
@@ -35,7 +35,7 @@
 		<input type="button" v-if="joinedRooms.length != 0" v-bind:value="toggleJoinedValue" @click="toggleJoined">
 		<div class="room-list">
 			<p v-if="joinedRooms.length == 0">You haven't joined any rooms yet!</p>
-			<ul id="joined-rooms" v-bind:class="{ 'show': showJoined }">
+			<ul id="joined-rooms" v-bind:class="{ 'hide': hideJoined }">
 				<li v-for="room in joinedRooms">
 					<room-card :room="room"></room-card>
 				</li>
@@ -48,7 +48,7 @@
 		<input type="button" v-if="availableRooms.length != 0" v-bind:value="toggleAvailableValue" @click="toggleAvailable">
 		<div class="room-list">
 			<p v-if="availableRooms.length == 0">There are no new rooms to join!</p>
-			<ul id="available-rooms" v-bind:class="{ 'show': showAvailable }">
+			<ul id="available-rooms" v-bind:class="{ 'hide': hideAvailable }">
 				<li v-for="room in availableRooms">
 					<room-card :room="room"></room-card>
 					<br/>
@@ -81,12 +81,12 @@ export default {
 			userId: '',
 			data: '',
 			rooms: [],
-			showModerated: false,
-			toggleModeratedValue: 'Show',
-			showJoined: false,
-			toggleJoinedValue: 'Show',
-			showAvailable: false,
-			toggleAvailableValue: 'Show',
+			hideModerated: false,
+			toggleModeratedValue: 'Hide',
+			hideJoined: false,
+			toggleJoinedValue: 'Hide',
+			hideAvailable: false,
+			toggleAvailableValue: 'Hide',
 		}
 	},
 
@@ -134,18 +134,18 @@ export default {
 	    },
 
 	    toggleModerated() {
-	    	this.showModerated = !this.showModerated;
-	    	this.toggleModeratedValue = this.showModerated ? 'Show' : 'Hide';
+	    	this.hideModerated = !this.hideModerated;
+	    	this.toggleModeratedValue = this.hideModerated ? 'Show' : 'Hide';
 	    },
 
 	    toggleJoined() {
-	    	this.showJoined = !this.showJoined;
-	    	this.toggleJoinedValue = this.showJoined ? 'Show' : 'Hide';
+	    	this.hideJoined = !this.hideJoined;
+	    	this.toggleJoinedValue = this.hideJoined ? 'Show' : 'Hide';
 	    },
 
 	    toggleAvailable() {
-	    	this.showAvailable = !this.showAvailable;
-	    	this.toggleAvailableValue = this.showAvailable ? 'Show' : 'Hide';
+	    	this.hideAvailable = !this.hideAvailable;
+	    	this.toggleAvailableValue = this.hideAvailable ? 'Show' : 'Hide';
 	    },
 
 			joinRoom(name) {
@@ -245,7 +245,7 @@ export default {
 		margin-bottom: 50px;
 	}
 
-	.show {
+	.hide {
 		display: none;
 	}
 
