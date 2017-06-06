@@ -16,6 +16,15 @@
 			<ul id="moderated-rooms" v-bind:class="{ 'show': showModerated }">
 				<li v-for="room in moderatedRooms">
 					<room-card :room="room"></room-card>
+					<p>Requests: </p>
+					<ul v-if="room.requests">
+						<li v-for="request in room.requests">
+							{{ request }}
+							</br>
+							<button v-on:click="acceptRequest(room.name, request)">Accept request</button>
+							<button v-on:click="declineRequest(room.name, request)">Decline request</button>
+						</li>
+					</ul>
 				</li>
 			</ul>
 		</div>
@@ -158,20 +167,38 @@ export default {
 					requesterId: this.userId
 				})
 				.then((response) => {
-					console.log("Response", response.data.data);
 					if (response.data.resolved) {
-						var room = this.rooms.find((room) => {
+						let room = this.rooms.find((room) => {
 							return room.name == name;
 						});
-						console.log("Room", room);
 
 						if (room && room.requests) {
-							room.requests.push(requesterId);
+							room.requests.push(this.userId);
 						}
 					} else {
 						this.data = response.data.data;
 					}
 				});
+			},
+
+			acceptRequest(roomName, requesterId) {
+				axios.post('/api/room/acceptRequest', {
+					name: roomName,
+					requesterId: requesterId
+				})
+				.then((response) => {
+
+				})
+			},
+
+			declineRequest(roomName, requesterId) {
+				axios.post('/api/room/declineRequest', {
+					name: roomName,
+					requesterId: requesterId
+				})
+				.then((response) => {
+					
+				})
 			}
 
 	},
@@ -196,12 +223,10 @@ export default {
 		},
 
 		availableRooms: function() {
-			var rooms = this.rooms.filter( ( room ) => {
+			return this.rooms.filter( ( room ) => {
 				return room.admin != this.userId &&
 					   room.users.indexOf( this.userId ) == -1;
 			} );
-			console.log(rooms);
-			return rooms;
 		}
 
 	},

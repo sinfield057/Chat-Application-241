@@ -105,7 +105,7 @@ router.post('/joinRoom', (req, res) => {
 					})
 				}
 				else if (room) {
-					var updatedUsers = room.users;
+					let updatedUsers = room.users;
 					updatedUsers.push(userId);
 
 					Room.update(
@@ -147,7 +147,6 @@ router.post('/joinRoom', (req, res) => {
 router.post('/requestAccess', (req, res) => {
 	const name = req.body.name;
 	const requesterId = req.body.requesterId;
-	console.log(name, requesterId);
 
 	Room.findOne(
 		{
@@ -166,7 +165,7 @@ router.post('/requestAccess', (req, res) => {
 							resolved: false
 						});
 					} else {
-						var updatedRequests = room.requests;
+						let updatedRequests = room.requests;
 						updatedRequests.push(requesterId);
 
 						Room.update(
@@ -191,6 +190,128 @@ router.post('/requestAccess', (req, res) => {
 							}
 						);
 					}
+			} else {
+				res.send({
+					data: "Room " + name + " not found",
+					resolved: false
+				});
+			}
+		}
+	);
+});
+
+router.post('/acceptRequest', (req, res) => {
+	const userId = req.session.userId;
+	const name = req.body.name;
+	const requesterId = req.body.requesterId;
+
+	Room.findOne(
+		{
+			name: name
+		},
+		(err, room) => {
+			if (err) {
+				res.send({
+					data: "Database error: " + err,
+					resolved: false
+				});
+			} else if (room) {
+				const index = room.requests.indexOf(requesterId);
+
+				if (room.admin == userId && ~index) {
+					let updatedRequests = room.requests;
+					let updatedUsers = room.users;
+
+					updatedRequests.splice(index, 1);
+					updatedUsers.push(requesterId);
+
+					Room.update(
+						{
+							name: name
+						},
+						{
+							requests: updatedRequests,
+							users: updatedUsers
+						},
+						(err, rawResponse) => {
+							if (err) {
+								res.send({
+									data: "Couldn't accept request",
+									resolved: false
+								});
+							} else {
+								res.send({
+									data: "Request accepted",
+									resolved: true
+								});
+							}
+						}
+					);
+				} else {
+					res.send({
+						data: "Request not found",
+						resolved: false
+					});
+				}
+			} else {
+				res.send({
+					data: "Room " + name + " not found",
+					resolved: false
+				});
+			}
+		}
+	);
+});
+
+router.post('/declineRequest', (req, res) => {
+	const userId = req.session.userId;
+	const name = req.body.name;
+	const requesterId = req.body.requesterId;
+
+	Room.findOne(
+		{
+			name: name
+		},
+		(err, room) => {
+			if (err) {
+				res.send({
+					data: "Database error: " + err,
+					resolved: false
+				});
+			} else if (room) {
+				const index = room.requests.indexOf(requesterId);
+
+				if (room.admin == userId && ~index) {
+					let updatedRequests = room.requests;
+					updatedRequests.splice(index, 1);
+
+					Room.update(
+						{
+							name: name
+						},
+						{
+							requests: updatedRequests,
+						},
+						(err, rawResponse) => {
+							if (err) {
+								res.send({
+									data: "Couldn't decline request",
+									resolved: false
+								});
+							} else {
+								res.send({
+									data: "Request declined",
+									resolved: true
+								});
+							}
+						}
+					);
+				} else {
+					res.send({
+						data: "Request not found",
+						resolved: false
+					});
+				}
 			} else {
 				res.send({
 					data: "Room " + name + " not found",
