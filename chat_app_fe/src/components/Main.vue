@@ -1,7 +1,7 @@
 <template>
 	<div class="main">
 		<div class="user-info-container">
-			<h1>Welcome {{ username }}!</h1>
+			<h3>Welcome {{ username }}!</h3>
 			<p>Your userId is: {{ userId }}</p>
 
 			<input type="button" name="logout-button" value="Logout" @click="logout">	
@@ -72,11 +72,11 @@ export default {
 			userId: '',
 			data: '',
 			rooms: [],
-			showModerated: true,
+			showModerated: false,
 			toggleModeratedValue: 'Show',
-			showJoined: true,
+			showJoined: false,
 			toggleJoinedValue: 'Show',
-			showAvailable: true,
+			showAvailable: false,
 			toggleAvailableValue: 'Show',
 		}
 	},
