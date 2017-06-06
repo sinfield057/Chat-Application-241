@@ -51,8 +51,13 @@ app.get( '*', ( req, res ) => {
 } );
 console.log( 'Modules loaded...' );
 
-socket.on( 'connection', socket => {
-	console.log( "Connected!", socket );
+socket.on( 'connect', client => {
+	console.log( client, " connected!" );
+	client.on( "disconnect", () => {
+		console.log( "disconnected" );
+	});
+
+	socket.emit( "welcome", "we got ya fam" );
 } );
 
 server.listen( 8000, () => {

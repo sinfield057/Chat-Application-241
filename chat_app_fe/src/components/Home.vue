@@ -36,6 +36,7 @@ export default {
   methods: {
 
     doLogin() {
+      const self = this;
       axios.post( '/api/user/login', {
             username: this.username,
             password: this.password
@@ -43,6 +44,12 @@ export default {
            .then( ( response ) => {
             this.data = response.data.data;
             if ( response.data.resolved == true ) {
+              self.$socket.emit( 'connect', this.username );
+              
+              self.$options.sockets.welcome = ( data ) => {
+                console.log( data );
+              }
+              
               router.push('/main');   
             }
            })
