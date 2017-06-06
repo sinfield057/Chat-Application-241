@@ -16,7 +16,7 @@
 			<ul id="moderated-rooms" v-bind:class="{ 'hide': hideModerated }">
 				<li v-for="room in moderatedRooms">
 					<room-card :room="room"></room-card>
-					<p>Requests: </p>
+					<p v-if="room.requests.length">Requests: </p>
 					<ul v-if="room.requests">
 						<li v-for="request in room.requests">
 							{{ request }}
@@ -52,8 +52,10 @@
 				<li v-for="room in availableRooms">
 					<room-card :room="room"></room-card>
 					<br/>
-					<button v-on:click="requestAccessToRoom(room.name)" v-if="room.admin">Request access</button>
-					<button v-on:click="joinRoom(room.name)" v-else>Join room</button>
+					<button v-if="room.admin" @click="requestAccessToRoom(room.name)" :disabled="~room.requests.indexOf(userId) ? true : false">
+						{{ ~room.requests.indexOf(userId) ? "Waiting for request to be accepted" : "Request access" }}
+					</button>
+					<button v-else @click="joinRoom(room.name)">Join room</button>
 				</li>
 			</ul>
 		</div>
@@ -154,7 +156,11 @@ export default {
 				})
 				.then((response) => {
 					if (response.data.resolved) {
-						router.push('/');
+						const room = this.rooms.find((room) => {
+							return room.name == name;
+						});
+
+						room.users.push(this.userId);
 					} else {
 						this.data = response.data.data;
 					}
@@ -168,7 +174,7 @@ export default {
 				})
 				.then((response) => {
 					if (response.data.resolved) {
-						let room = this.rooms.find((room) => {
+						const room = this.rooms.find((room) => {
 							return room.name == name;
 						});
 
@@ -181,26 +187,54 @@ export default {
 				});
 			},
 
-			acceptRequest(roomName, requesterId) {
+			acceptRequest(name, requesterId) {
 				axios.post('/api/room/acceptRequest', {
-					name: roomName,
+					name: name,
 					requesterId: requesterId
 				})
 				.then((response) => {
+					if (response.data.resolved) {
+						const room = this.rooms.find((room) => {
+							return room.name == name;
+						});
 
-				})
+						if (room && room.requests) {
+							const index = room.requests.find((request) => {
+								return request == requesterId;
+							});
+
+							room.requests.splice(index, 1);
+						}
+						
+					} else {
+						this.data = response.data.data;
+					}
+				});
 			},
 
-			declineRequest(roomName, requesterId) {
+			declineRequest(name, requesterId) {
 				axios.post('/api/room/declineRequest', {
-					name: roomName,
+					name: name,
 					requesterId: requesterId
 				})
 				.then((response) => {
-					
-				})
-			}
+					if (response.data.resolved) {
+						const room = this.rooms.find((room) => {
+							return room.name == name;
+						});
 
+						if (room && room.requests) {
+							const index = room.requests.find((request) => {
+								return request == requesterId;
+							});
+
+							room.requests.splice(index, 1);
+						}
+					} else {
+						this.data = response.data.data;
+					}
+				});
+			}
 	},
 
 	computed: {
