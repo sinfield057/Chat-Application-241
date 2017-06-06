@@ -89,5 +89,61 @@ router.get( '/getRooms', ( req, res ) => {
 
 } );
 
+router.post('/joinRoom', (req, res) => {
+	const userId = req.session.userId;
+	const name = req.body.name;
+
+	if (userId !== undefined) {
+		Room.findOne({
+				name: name
+			},
+			(err, room) => {
+				if (err) {
+					res.send({
+						data: "Database error: " + err,
+						resolved: false
+					})
+				}
+				else if (room) {
+					var updatedUsers = room.users;
+					updatedUsers.push(userId);
+					console.log(room, updatedUsers);
+
+					Room.update(
+					{
+						name: name
+					},
+					{
+						users: updatedUsers
+					},
+					(err, rawResponse) => {
+						if (err) {
+							res.send({
+								data: "Couldn't join the room: " + err,
+								resolved: false
+							});
+						} else {
+							res.send({
+								data: "Joined room " + name,
+								resolved: true
+							});
+						}
+					});
+				} else {
+					res.send({
+						data: "Room " + name + " not found",
+						resolved: false
+					});
+				}
+			}
+		);
+	} else {
+		res.send({
+			data: "Invalid session",
+			resolved: false
+		});
+	}
+});
+
 
 module.exports = router;

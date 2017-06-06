@@ -8,7 +8,7 @@
 		<p>Room Description</p>
 		<textarea name="create-room-button" v-model="description"></textarea>
 		<br />
-		<input type="checkbox" name = "create-room-checkbox" v-model="isPublic">Public room</input>
+		<input type="checkbox" name="create-room-checkbox" v-model="isPublic">Public room</input>
 		<br />
 		<input type="button" name="create-room" value="Create room" @click="createRoom">
 <!-- 		<input type="button" name="logout-button" value="Logout" @click="logout">	 -->

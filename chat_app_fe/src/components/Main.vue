@@ -42,6 +42,9 @@
 			<ul id="available-rooms" v-bind:class="{ 'show': showAvailable }">
 				<li v-for="room in availableRooms">
 					<room-card :room="room"></room-card>
+					<br/>
+					<button v-on:click="requestAccessToRoom(room.name)" v-if="room.admin">Request access</button>
+					<button v-on:click="joinRoom(room.name)" v-else>Join room</button>
 				</li>
 			</ul>
 		</div>
@@ -134,7 +137,25 @@ export default {
 	    toggleAvailable() {
 	    	this.showAvailable = !this.showAvailable;
 	    	this.toggleAvailableValue = this.showAvailable ? 'Show' : 'Hide';
-	    }
+	    },
+
+			joinRoom(name) {
+				axios.post('/api/room/joinRoom', {
+					name: name
+				})
+				.then((response) => {
+					console.log(response.data.data);
+					if (response.data.resolved) {
+						router.push('/');
+					} else {
+						this.data = response.data.data;
+					}
+				});
+			},
+
+			requestAccessToRoom(name) {
+
+			}
 
 	},
 
@@ -148,7 +169,11 @@ export default {
 		joinedRooms: function() {
 			return this.rooms.filter((room) => {
 				if (~room.users.indexOf(this.userId)) {
-					return room.admin && room.admin == this.userId;
+					if (room.admin) {
+						return !(room.admin == this.userId);
+					} else {
+						return true;
+					}
 				}
 			});
 		},
