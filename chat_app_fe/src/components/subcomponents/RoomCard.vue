@@ -4,6 +4,12 @@
 		<p>Name: {{ room.name }}</p>
 		<p>Description: {{ room.description }}</p>
 		<p>Created at: {{ room.createdAt }}</p>
+		<p>Requests: </p>
+		<ul v-if="room.requests">
+			<li v-for="request in room.requests">
+				{{ request }}
+			</li>
+		</ul>
 	</div>
 </template>
 

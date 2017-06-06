@@ -66,7 +66,7 @@ router.get( '/getRooms', ( req, res ) => {
 	
 	if( typeof userId !== 'undefined' ) {
 		Room.find( {}, 
-				   '_id name description users admin createdAt', 
+				   '_id name description users admin requests createdAt', 
 		( err, rooms ) => {
 			if( err ) {
 				res.send( {
@@ -107,7 +107,6 @@ router.post('/joinRoom', (req, res) => {
 				else if (room) {
 					var updatedUsers = room.users;
 					updatedUsers.push(userId);
-					console.log(room, updatedUsers);
 
 					Room.update(
 					{
@@ -143,6 +142,63 @@ router.post('/joinRoom', (req, res) => {
 			resolved: false
 		});
 	}
+});
+
+router.post('/requestAccess', (req, res) => {
+	const name = req.body.name;
+	const requesterId = req.body.requesterId;
+	console.log(name, requesterId);
+
+	Room.findOne(
+		{
+			name: name
+		},
+		(err, room) => {
+			if (err) {
+				res.send({
+					data: "Database error: " + err,
+					resolved: false
+				})
+			} else if (room) {
+					if (~room.requests.indexOf(requesterId)) {
+						res.send({
+							data: "User with id: " + requesterId + " already requested access to room " + name,
+							resolved: false
+						});
+					} else {
+						var updatedRequests = room.requests;
+						updatedRequests.push(requesterId);
+
+						Room.update(
+							{
+								name: name
+							},
+							{
+								requests: updatedRequests
+							},
+							(err, rawResponse) => {
+								if (err) {
+									res.send({
+										data: "Couldn't request access",
+										resolved: false
+									});
+								} else {
+									res.send({
+										data: "Request sent",
+										resolved: true
+									});
+								}
+							}
+						);
+					}
+			} else {
+				res.send({
+					data: "Room " + name + " not found",
+					resolved: false
+				});
+			}
+		}
+	);
 });
 
 

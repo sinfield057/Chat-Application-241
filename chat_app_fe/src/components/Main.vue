@@ -144,7 +144,6 @@ export default {
 					name: name
 				})
 				.then((response) => {
-					console.log(response.data.data);
 					if (response.data.resolved) {
 						router.push('/');
 					} else {
@@ -154,7 +153,25 @@ export default {
 			},
 
 			requestAccessToRoom(name) {
+				axios.post('/api/room/requestAccess', {
+					name: name,
+					requesterId: this.userId
+				})
+				.then((response) => {
+					console.log("Response", response.data.data);
+					if (response.data.resolved) {
+						var room = this.rooms.find((room) => {
+							return room.name == name;
+						});
+						console.log("Room", room);
 
+						if (room && room.requests) {
+							room.requests.push(requesterId);
+						}
+					} else {
+						this.data = response.data.data;
+					}
+				});
 			}
 
 	},
@@ -179,10 +196,12 @@ export default {
 		},
 
 		availableRooms: function() {
-			return this.rooms.filter( ( room ) => {
+			var rooms = this.rooms.filter( ( room ) => {
 				return room.admin != this.userId &&
 					   room.users.indexOf( this.userId ) == -1;
 			} );
+			console.log(rooms);
+			return rooms;
 		}
 
 	},
