@@ -4,10 +4,15 @@ import bodyParser from 'body-parser';
 import multer from 'multer';
 import morgan from 'morgan';
 import mongoose from 'mongoose';
+import http from 'http';
+import io from 'socket.io';
 const mongoStore = require('connect-mongo')(session);
 
-const app 	 = express();
+
 const upload = multer();
+const app 	 = express();
+const server = http.createServer( app );
+const socket = io.listen( server );
 
 app.use( morgan( 'dev' ) );
 app.use( bodyParser.json() );
@@ -46,6 +51,10 @@ app.get( '*', ( req, res ) => {
 } );
 console.log( 'Modules loaded...' );
 
-app.listen( 8000, () => {
+socket.on( 'connection', socket => {
+	console.log( "Connected!", socket );
+} );
+
+server.listen( 8000, () => {
 	console.log( 'Listening on port 8000...' );
 } );

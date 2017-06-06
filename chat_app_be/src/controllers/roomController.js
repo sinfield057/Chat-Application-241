@@ -10,7 +10,7 @@ router.post( '/createRoom' , ( req, res ) => {
 	const userId 	  	= req.body.userId,
 		  	name   	  	= req.body.name,
 		  	description = req.body.description,
-				isPublic 		= req.body.isPublic;
+			isPublic 	= req.body.isPublic;
 
 	if ( userId == req.session.userId ) {
 
