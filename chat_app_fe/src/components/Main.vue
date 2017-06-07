@@ -15,7 +15,7 @@
 			<p v-if="moderatedRooms.length == 0">You aren't moderating any rooms!</p>
 			<ul id="moderated-rooms" v-bind:class="{ 'hide': hideModerated }">
 				<li v-for="room in moderatedRooms">
-				<router-link :to="{ path: 'roomChat', params: { roomName: roomName }}">
+				<router-link :to="{ path: 'roomChat/' + room.name }">
 					<room-card :room="room"></room-card>
 				</router-link>
 					<p v-if="room.requests.length">Requests: </p>

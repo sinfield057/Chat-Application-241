@@ -1,5 +1,6 @@
 <template>
-<div class="main">
+<div class="roomChat">
+<h1>boona</h1>
   <h3> {{ roomName }} </h3>
 </div>
 </template>

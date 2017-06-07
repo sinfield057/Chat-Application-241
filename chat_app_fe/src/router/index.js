@@ -32,7 +32,7 @@ export default new Router({
       component: CreateRoom
     },
     {
-      path: '/roomChat',
+      path: '/roomChat/:roomName',
       name: 'RoomChat',
       component: RoomChat,
       props: true
