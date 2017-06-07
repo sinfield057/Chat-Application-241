@@ -57,7 +57,7 @@ socket.on( 'connect', client => {
 		console.log( "disconnected" );
 	});
 
-	socket.emit( "welcome", "we got ya fam" );
+	socket.emit( "customEmit", "we got ya fam" );
 } );
 
 server.listen( 8000, () => {
