@@ -39,7 +39,9 @@
 			<p v-if="joinedRooms.length == 0">You haven't joined any rooms yet!</p>
 			<ul id="joined-rooms" v-bind:class="{ 'hide': hideJoined }">
 				<li v-for="room in joinedRooms">
-					<room-card :room="room"></room-card>
+					<router-link :to="{ path: 'roomChat/' + room.name }">
+						<room-card :room="room"></room-card>
+					</router-link>
 				</li>
 			</ul>
 		</div>
