@@ -54,7 +54,6 @@ public class MessageView extends RelativeLayout {
         mContext = context;
         LayoutInflater inflater = LayoutInflater.from(context);
 
-
         if( sender == null ) {
             inflater.inflate(R.layout.message_view_system_layout, null);
             return;
@@ -68,6 +67,7 @@ public class MessageView extends RelativeLayout {
             case LOCAL:
                 inflater.inflate(R.layout.message_view_local_layout, null);
                 break;
+
         }
     }
 

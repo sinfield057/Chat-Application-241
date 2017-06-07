@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2017 Theme Dimension, a Mobile Web America, Inc. venture - ThemeDimension.com
+  -->
+
+<RelativeLayout
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="@color/white"
+	xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<com.starter.chatappfmi.CustomViews.NavigationBar
+		android:id="@+id/room_navBar"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"/>
+
+	<ScrollView
+		android:layout_below="@+id/room_navBar"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:paddingBottom="16dp">
+		<LinearLayout
+			android:id="@+id/message_container_layout"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="vertical">
+
+		</LinearLayout>
+	</ScrollView>
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:weightSum="1"
+		android:background="@color/message_bg_color"
+		android:layout_alignParentBottom="true">
+
+		<EditText
+			android:id="@+id/message_input_field"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center_vertical"
+			android:minHeight="30dp"
+			android:inputType="text"
+			android:textColor="@color/black"
+			android:textSize="20sp"
+			android:hint="Enter your text"
+			android:textColorHint="@color/black"
+			android:background="@color/message_bg_color"
+			android:layout_weight="1"
+			android:layout_marginRight="12dp"
+			android:layout_marginLeft="12dp"
+			android:elevation="5dp"/>
+
+		<Button
+			android:id="@+id/send_message_button"
+			android:background="@drawable/ic_arrow_forward_black_24dp"
+			android:layout_width="40dp"
+			android:layout_height="40dp"
+			android:layout_marginRight="12dp"
+			android:layout_marginLeft="12dp"
+			android:elevation="5dp"/>
+	</LinearLayout>
+</RelativeLayout>

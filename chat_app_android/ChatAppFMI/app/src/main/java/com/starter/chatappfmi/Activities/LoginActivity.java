@@ -26,9 +26,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class LoginActivity extends AppCompatActivity implements NetworkListener {
-    private static final String TAG = "Login";
 
     //region GLOBALS
+
+    private static final String TAG = "Login";
 
     private NavigationBar mNavigationBar;
     private LogoView mLogoView;
@@ -79,7 +80,8 @@ public class LoginActivity extends AppCompatActivity implements NetworkListener 
                     break;
 
                 case R.id.register_link:
-                    //TODO create RegisterActivity
+                    Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                    startActivity(intent);
                     break;
             }
         }

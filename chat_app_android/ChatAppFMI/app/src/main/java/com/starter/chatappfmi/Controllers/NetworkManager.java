@@ -12,6 +12,7 @@ import com.starter.chatappfmi.CommonUtils.ConstantUtils;
 import com.starter.chatappfmi.CommonUtils.NetworkStatus;
 import com.starter.chatappfmi.R;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -70,7 +71,7 @@ public class NetworkManager {
 
     //region GLOBALS
     private static NetworkManager mInstance = new NetworkManager();
-    private static OkHttpClient mClient = new OkHttpClient();
+    private OkHttpClient mClient = new OkHttpClient();
 
     private NetworkListener mCallback;
 
@@ -78,12 +79,12 @@ public class NetworkManager {
     //endregion
 
     private NetworkManager() {
+        mClient = new OkHttpClient();
     }
 
     public static NetworkManager getInstance() {
         if( mInstance == null ) {
             mInstance = new NetworkManager();
-            mClient = new OkHttpClient();
             //TODO treat this case.
         }
         return mInstance;
@@ -94,8 +95,9 @@ public class NetworkManager {
         return this;
     }
 
-    public void setContext(Context context) {
+    public NetworkManager setContext(Context context) {
         mContext = context;
+        return mInstance;
     }
 
     //region LAUNCHER_DATA REQUESTS
@@ -277,56 +279,106 @@ public class NetworkManager {
     //endregion
 
     //region REGISTER REQUESTS
-    //TODO Reg Request.
+    public void register(String userName, String password) {
+        liveRegister(userName, password);
+    }
+
+    private void liveRegister(String userName, String password) {
+        RequestBody body = new FormBody.Builder()
+                .add("user", userName)
+                .add("password", password)
+                .build();
+
+        final Request request = new Request.Builder()
+                .url(NetworkStatus.REGISTER_REQUEST_URL)
+                .post(body)
+                .build();
+
+        mClient.newCall(request).enqueue(
+                new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        ResponseData responseData = new ResponseData();
+                        responseData.setCode(400);
+                        responseData.setDescription(e.getLocalizedMessage());
+
+                        mCallback.onFailure(responseData, ResponseType.USER);
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        int code = response.code();
+                        ResponseData responseData = new ResponseData();
+                        responseData.setCode(code);
+
+                        switch (code) {
+                            case NetworkStatus.SUCCESS:
+                                responseData.setDescription("Success");
+                                mCallback.onSuccess(responseData, ResponseType.USER);
+                                break;
+
+                            default:
+                                responseData.setDescription("Error");
+                                mCallback.onFailure(responseData, ResponseType.USER);
+                        }
+                    }
+                }
+        );
+    }
     //endregion
 
     //region ROOM LIST REQUEST
 
-    public void getRoomList(Context context) {
+    public void getRoomList() {
         if(ConstantUtils.DEMO_FLAG) {
             //TODO implement DEMO response
         } else {
-            mClient.newCall(
-                    new Request.Builder()
-                    .url(NetworkStatus.ROOM_REQUEST_URL)
-                    .build()
-            ).enqueue(new Callback() {
-                @Override
-                public void onFailure(Call call, IOException e) {
-                    ResponseData<Error> responseData = new ResponseData<Error>();
-                    responseData.setCode(NetworkStatus.CONNECTION_ERROR);
-                    responseData.setDescription("Unable to connect to server. Check Internet connection");
-                    responseData.setResponse(new Error(e.getLocalizedMessage()));
-
-                    mCallback.onFailure(responseData, ResponseType.ROOM_RETRIEVAL);
-                }
-
-                @Override
-                public void onResponse(Call call, Response response) throws IOException {
-                    try {
-                        JSONObject jsonResponse = new JSONObject(response.body().string());
-
-                        ResponseData<JSONObject> responseData = new ResponseData<JSONObject>();
-                        responseData.setCode(response.code());
-                        responseData.setResponse(jsonResponse);
-
-                        mCallback.onSuccess(responseData, ResponseType.ROOM_RETRIEVAL);
-                    } catch (JSONException e) {
-                        Log.e(TAG, "Error parsing server response: " + e.getLocalizedMessage() );
-
-                        Error error = new Error(e.getLocalizedMessage());
-
-                        ResponseData<Error> responseData = null;
-                        responseData = new ResponseData<Error>();
-                        responseData.setCode(response.code());
-                        responseData.setResponse(error);
-
-                        mCallback.onFailure(responseData, ResponseType.ERROR);
-                    }
-                }
-            });
+            liveRoomList();
         }
     }
 
+    private void liveRoomList() {
+        mClient.newCall(
+                new Request.Builder()
+                        .url(NetworkStatus.ROOM_REQUEST_URL)
+                        .build()
+        ).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                ResponseData<Error> responseData = new ResponseData<Error>();
+                responseData.setCode(NetworkStatus.CONNECTION_ERROR);
+                responseData.setDescription("Unable to connect to server. Check Internet connection");
+                responseData.setResponse(new Error(e.getLocalizedMessage()));
+
+                mCallback.onFailure(responseData, ResponseType.ROOM_RETRIEVAL);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                try {
+                    JSONObject jsonResponse = new JSONObject(response.body().string());
+                    JSONArray array = jsonResponse.getJSONArray("rooms");
+                    RoomManager.getInstance().setRooms(array);
+
+                    ResponseData<JSONObject> responseData = new ResponseData<JSONObject>();
+                    responseData.setCode(response.code());
+                    responseData.setResponse(jsonResponse);
+
+                    mCallback.onSuccess(responseData, ResponseType.ROOM_RETRIEVAL);
+                } catch (JSONException e) {
+                    Log.e(TAG, "Error parsing server response: " + e.getLocalizedMessage() );
+
+                    Error error = new Error(e.getLocalizedMessage());
+
+                    ResponseData<Error> responseData = null;
+                    responseData = new ResponseData<Error>();
+                    responseData.setCode(response.code());
+                    responseData.setResponse(error);
+
+                    mCallback.onFailure(responseData, ResponseType.ERROR);
+                }
+            }
+        });
+    }
     //endregion
 }
