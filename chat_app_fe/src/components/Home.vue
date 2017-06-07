@@ -3,16 +3,36 @@
   	<img src="../assets/logo2.png" id="logo">
 
     <h3>Chat App</h3>
-
-    <input type="text" name="username" placeholder="Username" v-model="username">
-    <input type="password" name="password" placeholder="Password" v-model="password">
+    <div class = "log_reg">
+      <v-text-field
+              name="Username"
+              label="Username"
+              value="Input text0"
+              class="input-group--focused   "
+              v-model="username"
+            > </v-text-field>
+             <v-text-field
+              name="Password"
+              type="password"
+              label="Password"
+              value="Input text0"
+              class="input-group--focused  "
+              v-model="password"
+            > </v-text-field>
+      </div>
     <br />
     <br />
-    <input type="button" name="login-button" value="Login" @click="doLogin">
-    <input type="button" name="register-button" value="Register" @click="doRegister">
+   
+    <div class = "logreg">
+        <v-btn  class="blue darken-1 white--text mt-3" name="login-button"  @click.native="doLogin">Login</v-btn>
+        <v-btn  class="grey lighten-1 mt-3" name="register-button"  @click.native="doRegister">Register</v-btn>
+    </div>
+    
     <p>{{ data }}</p>
   </div>
 </template>
+
+
 
 
 <script>
@@ -70,3 +90,13 @@ export default {
   }
 }
 </script>
+<style scoped>
+
+.log_reg{
+  width:30%;
+  display: flex;
+  justify-content: center;
+  flex-direction:column;
+  margin: auto;
+}
+</style>
