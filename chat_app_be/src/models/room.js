@@ -14,6 +14,7 @@ const roomSchema = new Schema( {
 		dateSent: Date
 	} ],
 	admin: Schema.Types.ObjectId,
+	requests: [ { type: Schema.Types.ObjectId } ],
 	createdAt: Date
 } );
 
