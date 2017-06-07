@@ -19,14 +19,10 @@
               class="input-group--focused  "
               v-model="password"
             > </v-text-field>
-      </div>
-    <br />
-    <br />
-   
-    <div class = "logreg">
+      </div>   
+    
         <v-btn  class="blue darken-1 white--text mt-3" name="login-button"  @click.native="doLogin">Login</v-btn>
         <v-btn  class="grey lighten-1 mt-3" name="register-button"  @click.native="doRegister">Register</v-btn>
-    </div>
     
     <p>{{ data }}</p>
   </div>
@@ -99,4 +95,8 @@ export default {
   flex-direction:column;
   margin: auto;
 }
+#logo{
+  margin-top: -50px;
+}
+
 </style>
