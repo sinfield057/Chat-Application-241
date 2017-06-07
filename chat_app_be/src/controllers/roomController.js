@@ -7,9 +7,10 @@ import mongoose from 'mongoose'
 const router = express.Router();
 
 router.post( '/createRoom' , ( req, res ) => {
-	const userId 	  = req.body.userId,
-		  name   	  = req.body.name,
-		  description = req.body.description;
+	const userId 	  	= req.body.userId,
+		  	name   	  	= req.body.name,
+		  	description = req.body.description,
+				isPublic 		= req.body.isPublic;
 
 	if ( userId == req.session.userId ) {
 
@@ -32,7 +33,7 @@ router.post( '/createRoom' , ( req, res ) => {
 					_id: mongoose.mongo.ObjectId(),
 					name: name,
 					description: description,
-					admin: userId,
+					admin: !isPublic ? userId : null,
 					users: [ userId ],
 					createdAt: Date.now()
 				} );
@@ -65,7 +66,7 @@ router.get( '/getRooms', ( req, res ) => {
 	
 	if( typeof userId !== 'undefined' ) {
 		Room.find( {}, 
-				   '_id name description users admin createdAt', 
+				   '_id name description users admin requests createdAt', 
 		( err, rooms ) => {
 			if( err ) {
 				res.send( {
@@ -87,6 +88,239 @@ router.get( '/getRooms', ( req, res ) => {
 	}
 
 } );
+
+router.post('/joinRoom', (req, res) => {
+	const userId = req.session.userId;
+	const name = req.body.name;
+
+	if (userId !== undefined) {
+		Room.findOne({
+				name: name
+			},
+			(err, room) => {
+				if (err) {
+					res.send({
+						data: "Database error: " + err,
+						resolved: false
+					})
+				}
+				else if (room) {
+					let updatedUsers = room.users;
+					updatedUsers.push(userId);
+
+					Room.update(
+					{
+						name: name
+					},
+					{
+						users: updatedUsers
+					},
+					(err, rawResponse) => {
+						if (err) {
+							res.send({
+								data: "Couldn't join the room: " + err,
+								resolved: false
+							});
+						} else {
+							res.send({
+								data: "Joined room " + name,
+								resolved: true
+							});
+						}
+					});
+				} else {
+					res.send({
+						data: "Room " + name + " not found",
+						resolved: false
+					});
+				}
+			}
+		);
+	} else {
+		res.send({
+			data: "Invalid session",
+			resolved: false
+		});
+	}
+});
+
+router.post('/requestAccess', (req, res) => {
+	const name = req.body.name;
+	const requesterId = req.body.requesterId;
+
+	Room.findOne(
+		{
+			name: name
+		},
+		(err, room) => {
+			if (err) {
+				res.send({
+					data: "Database error: " + err,
+					resolved: false
+				})
+			} else if (room) {
+					if (~room.requests.indexOf(requesterId)) {
+						res.send({
+							data: "User with id: " + requesterId + " already requested access to room " + name,
+							resolved: false
+						});
+					} else {
+						let updatedRequests = room.requests;
+						updatedRequests.push(requesterId);
+
+						Room.update(
+							{
+								name: name
+							},
+							{
+								requests: updatedRequests
+							},
+							(err, rawResponse) => {
+								if (err) {
+									res.send({
+										data: "Couldn't request access",
+										resolved: false
+									});
+								} else {
+									res.send({
+										data: "Request sent",
+										resolved: true
+									});
+								}
+							}
+						);
+					}
+			} else {
+				res.send({
+					data: "Room " + name + " not found",
+					resolved: false
+				});
+			}
+		}
+	);
+});
+
+router.post('/acceptRequest', (req, res) => {
+	const userId = req.session.userId;
+	const name = req.body.name;
+	const requesterId = req.body.requesterId;
+
+	Room.findOne(
+		{
+			name: name
+		},
+		(err, room) => {
+			if (err) {
+				res.send({
+					data: "Database error: " + err,
+					resolved: false
+				});
+			} else if (room) {
+				const index = room.requests.indexOf(requesterId);
+
+				if (room.admin == userId && ~index) {
+					let updatedRequests = room.requests;
+					let updatedUsers = room.users;
+
+					updatedRequests.splice(index, 1);
+					updatedUsers.push(requesterId);
+
+					Room.update(
+						{
+							name: name
+						},
+						{
+							requests: updatedRequests,
+							users: updatedUsers
+						},
+						(err, rawResponse) => {
+							if (err) {
+								res.send({
+									data: "Couldn't accept request",
+									resolved: false
+								});
+							} else {
+								res.send({
+									data: "Request accepted",
+									resolved: true
+								});
+							}
+						}
+					);
+				} else {
+					res.send({
+						data: "Request not found",
+						resolved: false
+					});
+				}
+			} else {
+				res.send({
+					data: "Room " + name + " not found",
+					resolved: false
+				});
+			}
+		}
+	);
+});
+
+router.post('/declineRequest', (req, res) => {
+	const userId = req.session.userId;
+	const name = req.body.name;
+	const requesterId = req.body.requesterId;
+
+	Room.findOne(
+		{
+			name: name
+		},
+		(err, room) => {
+			if (err) {
+				res.send({
+					data: "Database error: " + err,
+					resolved: false
+				});
+			} else if (room) {
+				const index = room.requests.indexOf(requesterId);
+
+				if (room.admin == userId && ~index) {
+					let updatedRequests = room.requests;
+					updatedRequests.splice(index, 1);
+
+					Room.update(
+						{
+							name: name
+						},
+						{
+							requests: updatedRequests,
+						},
+						(err, rawResponse) => {
+							if (err) {
+								res.send({
+									data: "Couldn't decline request",
+									resolved: false
+								});
+							} else {
+								res.send({
+									data: "Request declined",
+									resolved: true
+								});
+							}
+						}
+					);
+				} else {
+					res.send({
+						data: "Request not found",
+						resolved: false
+					});
+				}
+			} else {
+				res.send({
+					data: "Room " + name + " not found",
+					resolved: false
+				});
+			}
+		}
+	);
+});
 
 
 module.exports = router;

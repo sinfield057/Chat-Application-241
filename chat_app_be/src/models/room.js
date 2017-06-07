@@ -7,6 +7,7 @@ const roomSchema = new Schema( {
 	description: String,
 	users: [ { type: Schema.Types.ObjectId } ],
 	admin: Schema.Types.ObjectId,
+	requests: [ { type: Schema.Types.ObjectId } ],
 	createdAt: Date
 } );
 

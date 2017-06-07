@@ -8,6 +8,7 @@
 		<p>Room Description</p>
 		<textarea name="create-room-button" v-model="description"></textarea>
 		<br />
+		<input type="checkbox" name="create-room-checkbox" v-model="isPublic">Public room</input>
 		<br />
 		<input type="button" name="create-room" value="Create room" @click="createRoom">
 <!-- 		<input type="button" name="logout-button" value="Logout" @click="logout">	 -->
@@ -31,54 +32,50 @@ export default {
 			userId: '',
 			data: '',
 			name: '',
-			description: ''
+			description: '',
+			isPublic: false
 		}
 	},
 
 	methods: {
 		logout() {
-	    	const self = this;
-
 	    	axios.get( '/api/user/logout' )
 	    		 .then( ( response ) => {
 	    		 	if ( response.data.resolved ) {
 	    		 		router.push( '/' );
 	    		 	} else {
-	    		 		self.data = router.data.data;
+	    		 		this.data = router.data.data;
 	    		 		router.push( '/' );
 	    		 	}
 	    		 } );
 	    },
 
 		getSessionInfo() {
-	      const self = this;
-
 	      axios.get( '/api/user/validate' )
 	           .then( ( response ) => {
 	              if ( response.data.resolved ) {
-	                self.sessionValid = true;
-	                self.userId = response.data.userId;
-	                self.username = response.data.username;
+	                this.sessionValid = true;
+	                this.userId = response.data.userId;
+	                this.username = response.data.username;
 	              } else {
-	              	self.logout();
+	              	this.logout();
 	              }
 	           } );
 	    },
 
 	    createRoom() {
-	    	const self = this;
-
 	    	axios.post( '/api/room/createRoom', {
-	    		userId: self.userId,
-	    		name: self.name,
-	    		description: self.description
+	    		userId: this.userId,
+	    		name: this.name,
+	    		description: this.description,
+					isPublic: this.isPublic
 	    	} )
 	    	.then( ( response ) => {
 	    		if( response.data.resolved ) {
-	    			self.data = response.data.data;
+	    			this.data = response.data.data;
 	    			router.push( '/main' );
 	    		} else {
-	    			self.data = response.data.data;
+	    			this.data = response.data.data;
 	    		}
 	    	} );
 	    }
