@@ -33,6 +33,8 @@ export default {
           this.sessionValid = true;
           this.userId = response.data.userId;
           this.username = response.data.username;
+          
+          this.getRoom();
         } else {
           this.data = response.data.data;
           router.push('/');
@@ -41,11 +43,11 @@ export default {
     },
 
     getRoom() {
-      axios.get('/api/room/getRoom', {
+      axios.post('/api/room/getRoom', {
+        username: this.username,
         name: this.roomName
       })
       .then((response) => {
-        console.log(response.data.data);
         if (response.data.resolved) {
           this.room = response.data.data;
         } else {
@@ -57,7 +59,6 @@ export default {
 
   beforeMount() {
 		this.getSessionInfo();
-    this.getRoom();
 	}
 }
 </script>

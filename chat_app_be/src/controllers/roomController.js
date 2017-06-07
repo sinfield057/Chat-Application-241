@@ -90,8 +90,9 @@ router.get( '/getRooms', ( req, res ) => {
 
 } );
 
-router.get('/getRoom', (req, res) => {
+router.post('/getRoom', (req, res) => {
 	const userId = req.session.userId;
+	const username = req.body.username;
 	const name = req.body.name;
 
 	if (userId !== undefined) {
@@ -105,14 +106,14 @@ router.get('/getRoom', (req, res) => {
 					resolved: false
 				});
 			} else if (room) {
-				if (~room.users.indexOf(userId)) {
+				if (~room.users.indexOf(username)) {
 					res.send({
 						data: room,
 						resolved: true
 					});
 				} else {
 					res.send({
-						data: "User " + userId + " has not joined room " + name,
+						data: "User " + username + " has not joined room " + name,
 						resolved: false
 					});
 				}
