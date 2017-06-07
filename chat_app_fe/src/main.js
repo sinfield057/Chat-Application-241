@@ -5,13 +5,20 @@ import App from './App'
 import router from './router'
 import Vuetify from 'vuetify';
 import VueSocketio from 'vue-socket.io'
+import Vuex from 'vuex'
+import { store } from './store';
+
 
 Vue.use( VueSocketio, 'http://localhost:8000');
 
-Vue.use(Vuetify)
+Vue.use(Vuetify);
 /* eslint-disable no-new */
+
+
+
 new Vue({
   el: '#app',
+  store: store,
   router,
   template: '<App/>',
   components: { App },
@@ -24,6 +31,9 @@ new Vue({
   	},
   	customEmit: function( val ) {
   		console.log( val );
-  	}
-  }
+  	},
+    emitMessage: function( payload ) {
+
+    }
+  },
 })

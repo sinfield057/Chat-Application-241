@@ -60,6 +60,7 @@ export default {
            .then( ( response ) => {
             this.data = response.data.data;
             if ( response.data.resolved == true ) {
+              self.$store.commit( 'changeUsername', this.username );
               self.$socket.emit( 'connect', this.username );
               
               self.$options.sockets.welcome = ( data ) => {

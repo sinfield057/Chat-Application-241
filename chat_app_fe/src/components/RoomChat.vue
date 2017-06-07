@@ -2,6 +2,8 @@
 <div class="roomChat">
 <h1>boona</h1>
   <h3> {{ roomName }} </h3>
+  <input type="text" name="message-send" placeholder="Enter Message" v-model="message">
+  <button v-on:click="sendMessage()">Send</button>
 </div>
 </template>
 
@@ -20,7 +22,8 @@ export default {
       username: '',
 			sessionValid: false,
 			userId: '',
-			data: ''
+			data: '',
+      message: ''
     }
   },
 
@@ -36,6 +39,18 @@ export default {
           router.push('/');
         }
       });
+    },
+    sendMessage() {
+      console.log( 'wew' );
+      const payload = {
+        sender: this.username,
+        message: this.message,
+        dateSent: Date.now(),
+        room: this.roomName
+      }
+      this.$socket.emit('sendMessage', payload );
+      console.log( 'lad ' );
+      this.message = this.$store.state.username;
     }
   },
 

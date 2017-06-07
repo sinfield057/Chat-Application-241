@@ -1,0 +1,15 @@
+import Vue from 'vue';
+import Vuex from 'vuex';
+
+Vue.use(Vuex);
+
+export const store = new Vuex.Store({ 
+  state: { 
+    username: 'default'
+  }, 
+  mutations: { 
+    changeUsername ( state, user ) { 
+      state.username = user;
+    },
+  } 
+});

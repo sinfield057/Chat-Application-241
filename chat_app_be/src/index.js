@@ -57,6 +57,10 @@ socket.on( 'connect', client => {
 	client.on( "disconnect", () => {
 		console.log( "disconnected" );
 	});
+	client.on( 'sendMessage', ( payload ) => {
+		console.log( payload );
+		socket.emit( 'emitMessage', payload );
+	} );
 } );
 
 server.listen( 8000, () => {
