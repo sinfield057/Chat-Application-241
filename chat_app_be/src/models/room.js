@@ -5,9 +5,9 @@ const roomSchema = new Schema( {
 	_id: Schema.Types.ObjectId,
 	name: String,
 	description: String,
-	users: [ { type: Schema.Types.ObjectId } ],
-	admin: Schema.Types.ObjectId,
-	requests: [ { type: Schema.Types.ObjectId } ],
+	users: [ String ],
+	admin: String,
+	requests: [ String ],
 	createdAt: Date
 } );
 

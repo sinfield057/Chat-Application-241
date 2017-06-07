@@ -2,7 +2,6 @@
 	<div class="main">
 		<div class="user-info-container">
 			<h3>Welcome {{ username }}!</h3>
-			<p>Your userId is: {{ userId }}</p>
 
 			<input type="button" name="logout-button" value="Logout" @click="logout">	
 			<router-link :to=" 'createRoom' ">Create Room</router-link>
@@ -56,8 +55,8 @@
 				<li v-for="room in availableRooms">
 					<room-card :room="room"></room-card>
 					<br/>
-					<button v-if="room.admin" @click="requestAccessToRoom(room.name)" :disabled="~room.requests.indexOf(userId) ? true : false">
-						{{ ~room.requests.indexOf(userId) ? "Waiting for request to be accepted" : "Request access" }}
+					<button v-if="room.admin" @click="requestAccessToRoom(room.name)" :disabled="~room.requests.indexOf(username) ? true : false">
+						{{ ~room.requests.indexOf(username) ? "Waiting for request to be accepted" : "Request access" }}
 					</button>
 					<button v-else @click="joinRoom(room.name)">Join room</button>
 				</li>
@@ -82,9 +81,9 @@ export default {
 
 	data() {
 		return {
+			userId: '',			
 			username: '',
 			sessionValid: false,
-			userId: '',
 			data: '',
 			rooms: [],
 			hideModerated: false,
@@ -112,19 +111,17 @@ export default {
 	    },
 
 		getSessionInfo() {
-	      const self = this;
-
-	      axios.get( '/api/user/validate' )
-	           .then( ( response ) => {
-	              if ( response.data.resolved ) {
-	                self.sessionValid = true;
-	                self.userId = response.data.userId;
-	                self.username = response.data.username;
-	              } else {
-	              	self.logout();
-	              }
-	           } );
-	    },
+			axios.get('/api/user/validate')
+			.then((response) => {
+				if (response.data.resolved) {
+					this.sessionValid = true;
+					this.userId = response.data.userId;
+					this.username = response.data.username;
+				} else {
+					this.logout();
+				}
+			});
+		},
 
 	    getRooms() {
 	      const self = this;
@@ -156,7 +153,9 @@ export default {
 
 			joinRoom(name) {
 				axios.post('/api/room/joinRoom', {
-					name: name
+					name: name,
+					userId: this.userId,
+					username: this.username
 				})
 				.then((response) => {
 					if (response.data.resolved) {
@@ -164,7 +163,7 @@ export default {
 							return room.name == name;
 						});
 
-						room.users.push(this.userId);
+						room.users.push(this.username);
 					} else {
 						this.data = response.data.data;
 					}
@@ -174,7 +173,7 @@ export default {
 			requestAccessToRoom(name) {
 				axios.post('/api/room/requestAccess', {
 					name: name,
-					requesterId: this.userId
+					requester: this.username
 				})
 				.then((response) => {
 					if (response.data.resolved) {
@@ -183,7 +182,7 @@ export default {
 						});
 
 						if (room && room.requests) {
-							room.requests.push(this.userId);
+							room.requests.push(this.username);
 						}
 					} else {
 						this.data = response.data.data;
@@ -191,10 +190,10 @@ export default {
 				});
 			},
 
-			acceptRequest(name, requesterId) {
+			acceptRequest(name, requester) {
 				axios.post('/api/room/acceptRequest', {
 					name: name,
-					requesterId: requesterId
+					requester: requester
 				})
 				.then((response) => {
 					if (response.data.resolved) {
@@ -204,7 +203,7 @@ export default {
 
 						if (room && room.requests) {
 							const index = room.requests.find((request) => {
-								return request == requesterId;
+								return request == requester;
 							});
 
 							room.requests.splice(index, 1);
@@ -216,10 +215,10 @@ export default {
 				});
 			},
 
-			declineRequest(name, requesterId) {
+			declineRequest(name, requester) {
 				axios.post('/api/room/declineRequest', {
 					name: name,
-					requesterId: requesterId
+					requester: requester
 				})
 				.then((response) => {
 					if (response.data.resolved) {
@@ -229,7 +228,7 @@ export default {
 
 						if (room && room.requests) {
 							const index = room.requests.find((request) => {
-								return request == requesterId;
+								return request == requester;
 							});
 
 							room.requests.splice(index, 1);
@@ -244,15 +243,15 @@ export default {
 	computed: {
 		moderatedRooms: function() {
 			return this.rooms.filter( ( room ) => {
-				return room.admin == this.userId;
+				return room.admin == this.username;
 			} );
 		},
 
 		joinedRooms: function() {
 			return this.rooms.filter((room) => {
-				if (~room.users.indexOf(this.userId)) {
+				if (~room.users.indexOf(this.username)) {
 					if (room.admin) {
-						return !(room.admin == this.userId);
+						return !(room.admin == this.username);
 					} else {
 						return true;
 					}
@@ -262,8 +261,8 @@ export default {
 
 		availableRooms: function() {
 			return this.rooms.filter( ( room ) => {
-				return room.admin != this.userId &&
-					   room.users.indexOf( this.userId ) == -1;
+				return room.admin != this.username &&
+					   room.users.indexOf( this.username ) == -1;
 			} );
 		}
 

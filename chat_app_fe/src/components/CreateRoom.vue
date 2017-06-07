@@ -66,6 +66,7 @@ export default {
 	    createRoom() {
 	    	axios.post( '/api/room/createRoom', {
 	    		userId: this.userId,
+					username: this.username,
 	    		name: this.name,
 	    		description: this.description,
 					isPublic: this.isPublic
