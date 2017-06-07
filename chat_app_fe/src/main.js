@@ -32,8 +32,8 @@ new Vue({
   	customEmit: function( val ) {
   		console.log( val );
   	},
-    emitMessage: function( payload ) {
-
+    recieveMessage: function( payload ) {
+      console.log('recieve message: ', payload);
     }
   },
 })

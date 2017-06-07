@@ -118,6 +118,7 @@ export default {
 	                self.sessionValid = true;
 	                self.userId = response.data.userId;
 	                self.username = response.data.username;
+	                self.$store.commit( 'changeUsername', self.username );
 	              } else {
 	              	self.logout();
 	              }

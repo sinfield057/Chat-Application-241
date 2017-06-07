@@ -41,16 +41,14 @@ export default {
       });
     },
     sendMessage() {
-      console.log( 'wew' );
       const payload = {
         sender: this.username,
         message: this.message,
         dateSent: Date.now(),
         room: this.roomName
       }
-      this.$socket.emit('sendMessage', payload );
-      console.log( 'lad ' );
-      this.message = this.$store.state.username;
+      this.$socket.emit( 'sendMessage', payload );
+      this.message = '';
     }
   },
 
@@ -58,6 +56,7 @@ export default {
 		this.getSessionInfo();
 	}
 }
+
 </script>
 
 <style scoped>

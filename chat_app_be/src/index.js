@@ -6,6 +6,7 @@ import morgan from 'morgan';
 import mongoose from 'mongoose';
 import http from 'http';
 import io from 'socket.io';
+import Room from './models/room' 
 const mongoStore = require('connect-mongo')(session);
 
 
@@ -57,10 +58,36 @@ socket.on( 'connect', client => {
 	client.on( "disconnect", () => {
 		console.log( "disconnected" );
 	});
+	
 	client.on( 'sendMessage', ( payload ) => {
 		console.log( payload );
-		socket.emit( 'emitMessage', payload );
+		
+		const newMessage = {
+			sender: payload.sender,
+			message: payload.message,
+			dateSent: payload.date
+		};
+
+		Room.findOneAndUpdate( { 
+			name: payload.room 
+		}, {
+			$push: { messages: newMessage }
+		}, {new: true}, (err, doc) => {
+			if ( err ) {
+				client.emit( 'recieveMessage', { 
+					sender: 'Server',
+					message: 'Error sendind message!',
+					dateSent: payload.date,
+					room: payload.room
+				} );
+			} else {
+				socket.sockets.emit( 'recieveMessage', payload );
+			}
+		});
 	} );
+
+
+
 } );
 
 server.listen( 8000, () => {
