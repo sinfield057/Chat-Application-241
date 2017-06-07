@@ -89,6 +89,47 @@ router.get( '/getRooms', ( req, res ) => {
 
 } );
 
+router.get('/getRoom', (req, res) => {
+	const userId = req.session.userId;
+	const name = req.body.name;
+
+	if (userId !== undefined) {
+		Room.findOne({
+			name: name
+		}, '_id name description users admin requests createdAt',
+		(err, room) => {
+			if (err) {
+				res.send({
+					data: "Database error: " + err,
+					resolved: false
+				});
+			} else if (room) {
+				if (~room.users.indexOf(userId)) {
+					res.send({
+						data: room,
+						resolved: true
+					});
+				} else {
+					res.send({
+						data: "User " + userId + " has not joined room " + name,
+						resolved: false
+					});
+				}
+			} else {
+				res.send({
+					data: "Room " + name + " not found",
+					resolved: false
+				});
+			}
+		});
+	} else {
+		res.send({
+			data: "Invalid session",
+			reoslved: false
+		});
+	}
+});
+
 router.post('/joinRoom', (req, res) => {
 	const userId = req.session.userId;
 	const name = req.body.name;

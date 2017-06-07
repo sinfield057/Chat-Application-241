@@ -1,7 +1,7 @@
 <template>
 <div class="roomChat">
-<h1>boona</h1>
   <h3> {{ roomName }} </h3>
+  <h4> Users <h4>
 </div>
 </template>
 
@@ -20,7 +20,8 @@ export default {
       username: '',
 			sessionValid: false,
 			userId: '',
-			data: ''
+			data: '',
+      room: null,
     }
   },
 
@@ -33,7 +34,22 @@ export default {
           this.userId = response.data.userId;
           this.username = response.data.username;
         } else {
+          this.data = response.data.data;
           router.push('/');
+        }
+      });
+    },
+
+    getRoom() {
+      axios.get('/api/room/getRoom', {
+        name: this.roomName
+      })
+      .then((response) => {
+        console.log(response.data.data);
+        if (response.data.resolved) {
+          this.room = response.data.data;
+        } else {
+          this.data = response.data.data;
         }
       });
     }
@@ -41,6 +57,7 @@ export default {
 
   beforeMount() {
 		this.getSessionInfo();
+    this.getRoom();
 	}
 }
 </script>
