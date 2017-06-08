@@ -95,8 +95,5 @@ export default {
   flex-direction:column;
   margin: auto;
 }
-#logo{
-  margin-top: -50px;
-}
 
 </style>
