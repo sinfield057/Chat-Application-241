@@ -3,7 +3,6 @@
 		<div class="user-info-container cyan lighten-3 pa-2">
 			<div class = "ml-3">
 				<h5 class = "mb-0 white--text">Welcome {{ username }}!</h5>
-				<h7 class = "blue-grey--text">userId:{{ userId }}</h7>
 			</div>
 			<div>
 				<v-btn  class="red lighten-2 white--text" name="logout-button"  @click.native="logout">Logout</v-btn>
