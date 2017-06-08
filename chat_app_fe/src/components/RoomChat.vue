@@ -2,6 +2,14 @@
 <div class="roomChat">
   <h3> {{ roomName }} </h3>
   <h4> Users <h4>
+  <ul v-if="room" class="roomUsers">
+    <li v-for="user in room.users"> {{ user }} </li>
+  </ul>
+  <br />
+  <h4> Requests <h5>
+  <ul v-if="room" class="roomRequests">
+    <li v-for="request in room.requests"> {{ request }} </li>
+  </ul>
 </div>
 </template>
 
@@ -61,5 +69,7 @@ export default {
 </script>
 
 <style scoped>
-
+.roomUsers, .roomRequests {
+  padding: 0;
+}
 </style>
