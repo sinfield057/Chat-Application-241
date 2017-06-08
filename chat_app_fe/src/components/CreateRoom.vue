@@ -1,33 +1,40 @@
 <template>
 	<div class="createRoom">
-		<h3>Create Room</h3>
-		<br />
-		<p>Room Name:</p>
-		<v-text-field
-			name="Room Name"
-			label ="Room Name"
-			type="text"			
-			class="input-group "
-			v-model="name"								
-		></v-text-field>		
-		<br />
-		<p>Room Description</p>
+		<v-card >
+			<v-card-row class="blue darken-1 white--text mt-3">
+				<v-card-title class="card-title">
+					<v-card-column class="text-md-center display-2 ml-2"> Create Room</v-card-column>				
+				</v-card-title>
+			</v-card-row>			
+			
+			<v-card-text class ="grey lighten-4">	
 			<v-text-field
-			name="Room Description"
-			label ="Room Description"
-			type="text"			
-			class="input-group "
-			v-model="description"
-			multi-line			
-		></v-text-field>		
-		<br />
-		<input type="checkbox" name="create-room-checkbox" v-model="isPublic">Public room</input>
-		<br />
-	  	<v-btn  class="blue darken-1 white--text mt-3" name="create-room" value ="Create Room" @click.native="createRoom">Create Room</v-btn>
-	
-<!-- 		<input type="button" name="logout-button" value="Logout" @click="logout">	 -->
-		<br />
-		<router-link :to=" 'main' ">Back to main</router-link>
+				name="Room Name"
+				label ="Room Name"
+				type="text"			
+				class="input-group body-1"
+				v-model="name"								
+			></v-text-field>
+			<v-divider></v-divider>
+			<br />	
+				<v-text-field
+				name="Room Description"
+				label ="Room Description"
+				type="text"			
+				class="input-group body-1"
+				v-model="description"
+				multi-line			
+				rows = "3"
+			></v-text-field>		
+			<br />
+			<v-divider></v-divider>
+			<input type="checkbox" name="create-room-checkbox" v-model="isPublic" >Public room</input>
+			<br />
+			<v-btn  class="blue darken-1 white--text mt-3" name="create-room" value ="Create Room" @click.native="createRoom">Create Room</v-btn>
+			<br />
+			<router-link :to=" 'main' ">Back to main</router-link>
+			<v-card-text>
+		</v-card >
 	</div>
 </template>
 
@@ -42,7 +49,7 @@ export default {
 	data() {
 		return {
 			username: '',
-			sessionValid: false,
+			sessionValid: false,		
 			data: '',
 			name: '',
 			description: '',
@@ -67,7 +74,7 @@ export default {
 	      axios.get( '/api/user/validate' )
 	           .then( ( response ) => {
 	              if ( response.data.resolved ) {
-	                this.sessionValid = true;
+	                this.sessionValid = true;	               
 	                this.username = response.data.username;
 	              } else {
 	              	this.logout();
@@ -76,7 +83,7 @@ export default {
 	    },
 
 	    createRoom() {
-	    	axios.post( '/api/room/createRoom', {
+	    	axios.post( '/api/room/createRoom', {	    	
 	    		name: this.name,
 	    		description: this.description,
 					isPublic: this.isPublic
@@ -100,3 +107,12 @@ export default {
 }
 	
 </script>
+<style scoped>
+.createRoom{
+		width: 50%;  
+		height: 70%;
+		justify-content: center;
+		margin: auto;
+	
+	}
+</style>
