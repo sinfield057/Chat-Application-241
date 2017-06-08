@@ -1,6 +1,6 @@
 <template>
 	<div class="main">
-		<div class="user-info-container cyan lighten-3">
+		<div class="user-info-container cyan lighten-3 pa-2">
 			<div class = "ml-3">
 				<h5 class = "mb-0 white--text">Welcome {{ username }}!</h5>
 				<h7 class = "blue-grey--text">userId:{{ userId }}</h7>
@@ -292,16 +292,19 @@ export default {
 	}
 
 	.user-info-container {
-		margin: auto;
+		margin: 0 auto;
 		display: flex;
 		flex-wrap: nowrap;
 		width: 90%;
 		justify-content: space-between;
 		align-items: center;
-		padding: 4px;
 	}
 	.user-info-container > div{
 		flex-basis:auto;
 		text-align: left;
+	}
+	.room-list{
+		width:85%;
+		margin: 0 auto;
 	}
 </style>
