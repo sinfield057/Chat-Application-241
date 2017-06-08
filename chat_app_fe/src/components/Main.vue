@@ -1,13 +1,16 @@
 <template>
 	<div class="main">
-		<div class="user-info-container">
-			<h3>Welcome {{ username }}!</h3>
-			<p>Your userId is: {{ userId }}</p>
-
-			<input type="button" name="logout-button" value="Logout" @click="logout">	
-			<router-link :to=" 'createRoom' ">Create Room</router-link>
+		<div class="user-info-container cyan lighten-3">
+			<div class = "ml-3">
+				<h5 class = "mb-0 white--text">Welcome {{ username }}!</h5>
+				<h7 class = "blue-grey--text">userId:{{ userId }}</h7>
+			</div>
+			<div>
+				<v-btn  class="red lighten-2 white--text" name="logout-button"  @click.native="logout">Logout</v-btn>
+				<v-btn  class="green lighten-1 white--text" name="create-room" @click.native = "createRoom">Create Room</v-btn>
+			</div>
 		</div>
-		
+
 		<br />
 		<span>Moderated Rooms</span>
 		<input type="button" v-if="moderatedRooms.length != 0" v-bind:value="toggleModeratedValue" @click="toggleModerated">
@@ -93,6 +96,9 @@ export default {
 	},
 
 	methods: {
+		createRoom() {
+			router.push('/createRoom');
+		},
 		logout() {
 	    	const self = this;
 
@@ -132,7 +138,7 @@ export default {
 	              } else {
 	                self.rooms = response.data.data;
 	              }
-	           } ); 
+	           } );
 	    },
 
 	    toggleModerated() {
@@ -205,7 +211,7 @@ export default {
 
 							room.requests.splice(index, 1);
 						}
-						
+
 					} else {
 						this.data = response.data.data;
 					}
@@ -270,7 +276,7 @@ export default {
 		this.getRooms();
 	}
 }
-	
+
 </script>
 
 <style>
@@ -284,6 +290,16 @@ export default {
 	}
 
 	.user-info-container {
-		margin: 20px;
+		margin: auto;
+		display: flex;
+		flex-wrap: nowrap;
+		width: 90%;
+		justify-content: space-between;
+		align-items: center;
+		padding: 4px;
+	}
+	.user-info-container > div{
+		flex-basis:auto;
+		text-align: left;
 	}
 </style>
