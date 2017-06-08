@@ -11,9 +11,12 @@
 		</div>
 
 		<br />
-		<span>Moderated Rooms</span>
-		<input type="button" v-if="moderatedRooms.length != 0" v-bind:value="toggleModeratedValue" @click="toggleModerated">
-		<div class="room-list">
+		<div class = "list-heading text-xs-left">
+			<span class="headline">Moderated Rooms</span>
+			<hr>
+			<input type="button" v-if="moderatedRooms.length != 0" v-bind:value="toggleModeratedValue" @click="toggleModerated">
+		</div>
+		<div class="room-list grey lighten-4">
 			<p v-if="moderatedRooms.length == 0">You aren't moderating any rooms!</p>
 			<ul id="moderated-rooms" v-bind:class="{ 'hide': hideModerated }">
 				<li v-for="room in moderatedRooms">
@@ -32,10 +35,12 @@
 		</div>
 		<br />
 		<br />
-
-		<span>Joined Rooms</span>
-		<input type="button" v-if="joinedRooms.length != 0" v-bind:value="toggleJoinedValue" @click="toggleJoined">
-		<div class="room-list">
+		<div class = "list-heading text-xs-left">
+			<span class="headline">Joined Rooms</span>
+			<hr>
+			<input type="button" v-if="joinedRooms.length != 0" v-bind:value="toggleJoinedValue" @click="toggleJoined">
+		</div>
+		<div class="room-list grey lighten-4">
 			<p v-if="joinedRooms.length == 0">You haven't joined any rooms yet!</p>
 			<ul id="joined-rooms" v-bind:class="{ 'hide': hideJoined }">
 				<li v-for="room in joinedRooms">
@@ -45,10 +50,12 @@
 		</div>
 		<br />
 		<br />
-
-		<span>Available Rooms</span>
-		<input type="button" v-if="availableRooms.length != 0" v-bind:value="toggleAvailableValue" @click="toggleAvailable">
-		<div class="room-list">
+		<div class = "list-heading text-xs-left">
+			<span class = "headline">Available Rooms</span>
+			<hr>
+			<input type="button" v-if="availableRooms.length != 0" v-bind:value="toggleAvailableValue" @click="toggleAvailable">
+		</div>
+		<div class="room-list grey lighten-4">
 			<p v-if="availableRooms.length == 0">There are no new rooms to join!</p>
 			<ul id="available-rooms" v-bind:class="{ 'hide': hideAvailable }">
 				<li v-for="room in availableRooms">
@@ -273,7 +280,7 @@ export default {
 
 </script>
 
-<style>
+<style scoped>
 	.room-list ul {
 		list-style: none;
 		margin-bottom: 50px;
@@ -282,7 +289,9 @@ export default {
 	.hide {
 		display: none;
 	}
-
+	ul{
+		padding:0;
+	}
 	.user-info-container {
 		margin: 0 auto;
 		display: flex;
@@ -296,7 +305,21 @@ export default {
 		text-align: left;
 	}
 	.room-list{
-		width:85%;
+		width:90%;
 		margin: 0 auto;
+		padding-left: 5%;
+		padding-right: 5%;
+	}
+	.list-heading{
+		margin: 0 auto;
+		display: flex;
+		flex-wrap: nowrap;
+		width: 90%;
+		justify-content: space-between;
+		align-items: center;
+	}
+	.list-heading>hr{
+		display: inline-block;
+		width: 60%;
 	}
 </style>
