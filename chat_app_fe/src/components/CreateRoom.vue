@@ -1,16 +1,30 @@
 <template>
 	<div class="createRoom">
-		<h1>Create Room</h1>
+		<h3>Create Room</h3>
 		<br />
 		<p>Room Name:</p>
-		<input type="text" name="room-name" placeholder="Enter room name" v-model="name">
+		<v-text-field
+			name="Room Name"
+			label ="Room Name"
+			type="text"			
+			class="input-group "
+			v-model="name"								
+		></v-text-field>		
 		<br />
 		<p>Room Description</p>
-		<textarea name="create-room-button" v-model="description"></textarea>
+			<v-text-field
+			name="Room Description"
+			label ="Room Description"
+			type="text"			
+			class="input-group "
+			v-model="description"
+			multi-line			
+		></v-text-field>		
 		<br />
 		<input type="checkbox" name="create-room-checkbox" v-model="isPublic">Public room</input>
 		<br />
-		<input type="button" name="create-room" value="Create room" @click="createRoom">
+	  	<v-btn  class="blue darken-1 white--text mt-3" name="create-room" value ="Create Room" @click.native="createRoom">Create Room</v-btn>
+	
 <!-- 		<input type="button" name="logout-button" value="Logout" @click="logout">	 -->
 		<br />
 		<router-link :to=" 'main' ">Back to main</router-link>
