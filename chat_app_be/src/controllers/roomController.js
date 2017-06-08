@@ -7,13 +7,12 @@ import mongoose from 'mongoose'
 const router = express.Router();
 
 router.post( '/createRoom' , ( req, res ) => {
-	const userId 	  	= req.body.userId,
-				username 		= req.body.username,
-		  	name   	  	= req.body.name,
-		  	description = req.body.description,
-				isPublic 		= req.body.isPublic;
+	const username = req.session.username;
+	const name = req.body.name;
+	const description = req.body.description;
+	const isPublic = req.body.isPublic;
 
-	if ( userId == req.session.userId ) {
+	if (username != undefined) {
 
 		Room.findOne( {
 			name: name 
@@ -63,9 +62,9 @@ router.post( '/createRoom' , ( req, res ) => {
 } );
 
 router.get( '/getRooms', ( req, res ) => {
-	const userId = req.session.userId;
+	const username = req.session.username;
 	
-	if( typeof userId !== 'undefined' ) {
+	if( typeof username !== 'undefined' ) {
 		Room.find( {}, 
 				   '_id name description users admin requests createdAt', 
 		( err, rooms ) => {
@@ -91,11 +90,10 @@ router.get( '/getRooms', ( req, res ) => {
 } );
 
 router.post('/getRoom', (req, res) => {
-	const userId = req.session.userId;
-	const username = req.body.username;
+	const username = req.session.username;
 	const name = req.body.name;
 
-	if (userId !== undefined) {
+	if (username !== undefined) {
 		Room.findOne({
 			name: name
 		}, '_id name description users admin requests createdAt',
@@ -133,11 +131,10 @@ router.post('/getRoom', (req, res) => {
 });
 
 router.post('/joinRoom', (req, res) => {
-	const userId = req.body.userId;
-	const username = req.body.username;
+	const username = req.session.username;
 	const name = req.body.name;
 
-	if (userId == req.session.userId) {
+	if (username != undefined) {
 		Room.findOne({
 				name: name
 			},
@@ -245,7 +242,7 @@ router.post('/requestAccess', (req, res) => {
 });
 
 router.post('/acceptRequest', (req, res) => {
-	const userId = req.session.userId;
+	const username = req.session.username;
 	const name = req.body.name;
 	const requester = req.body.requester;
 
@@ -262,7 +259,7 @@ router.post('/acceptRequest', (req, res) => {
 			} else if (room) {
 				const index = room.requests.indexOf(requester);
 
-				if (room.admin == userId && ~index) {
+				if (room.admin == username && ~index) {
 					let updatedRequests = room.requests;
 					let updatedUsers = room.users;
 
@@ -308,7 +305,7 @@ router.post('/acceptRequest', (req, res) => {
 });
 
 router.post('/declineRequest', (req, res) => {
-	const userId = req.session.userId;
+	const username = req.session.username;
 	const name = req.body.name;
 	const requester = req.body.requester;
 
@@ -325,7 +322,7 @@ router.post('/declineRequest', (req, res) => {
 			} else if (room) {
 				const index = room.requests.indexOf(requester);
 
-				if (room.admin == userId && ~index) {
+				if (room.admin == username && ~index) {
 					let updatedRequests = room.requests;
 					updatedRequests.splice(index, 1);
 

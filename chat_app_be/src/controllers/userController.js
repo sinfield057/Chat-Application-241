@@ -123,9 +123,8 @@ router.get( '/validate', ( req, res ) => {
 		} else {
 			if ( foundUser && foundUser.username == username) {
 				res.send( {
+					username: username,					
 					resolved: true,
-					username: username,
-					userId: userId
 				} );
 			} else {
 				res.send( {

@@ -29,7 +29,6 @@ export default {
 		return {
 			username: '',
 			sessionValid: false,
-			userId: '',
 			data: '',
 			name: '',
 			description: '',
@@ -55,7 +54,6 @@ export default {
 	           .then( ( response ) => {
 	              if ( response.data.resolved ) {
 	                this.sessionValid = true;
-	                this.userId = response.data.userId;
 	                this.username = response.data.username;
 	              } else {
 	              	this.logout();
@@ -65,8 +63,6 @@ export default {
 
 	    createRoom() {
 	    	axios.post( '/api/room/createRoom', {
-	    		userId: this.userId,
-					username: this.username,
 	    		name: this.name,
 	    		description: this.description,
 					isPublic: this.isPublic

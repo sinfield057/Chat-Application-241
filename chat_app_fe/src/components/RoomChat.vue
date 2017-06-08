@@ -19,7 +19,6 @@ export default {
     return {
       username: '',
 			sessionValid: false,
-			userId: '',
 			data: '',
       room: null,
     }
@@ -30,9 +29,8 @@ export default {
       axios.get('/api/user/validate')
       .then((response) => {
         if (response.data.resolved) {
+          this.username = response.data.username;          
           this.sessionValid = true;
-          this.userId = response.data.userId;
-          this.username = response.data.username;
           
           this.getRoom();
         } else {
@@ -44,7 +42,6 @@ export default {
 
     getRoom() {
       axios.post('/api/room/getRoom', {
-        username: this.username,
         name: this.roomName
       })
       .then((response) => {
