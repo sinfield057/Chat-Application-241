@@ -17,9 +17,7 @@
 			<p v-if="moderatedRooms.length == 0">You aren't moderating any rooms!</p>
 			<ul id="moderated-rooms" v-bind:class="{ 'hide': hideModerated }">
 				<li v-for="room in moderatedRooms">
-				<router-link :to="{ path: 'roomChat/' + room.name }">
-					<room-card :room="room"></room-card>
-				</router-link>
+				<room-card :room="room"></room-card>
 					<p v-if="room.requests.length">Requests: </p>
 					<ul v-if="room.requests">
 						<li v-for="request in room.requests">
@@ -41,9 +39,7 @@
 			<p v-if="joinedRooms.length == 0">You haven't joined any rooms yet!</p>
 			<ul id="joined-rooms" v-bind:class="{ 'hide': hideJoined }">
 				<li v-for="room in joinedRooms">
-					<router-link :to="{ path: 'roomChat/' + room.name }">
-						<room-card :room="room"></room-card>
-					</router-link>
+					<room-card :room="room"></room-card>
 				</li>
 			</ul>
 		</div>
@@ -56,12 +52,11 @@
 			<p v-if="availableRooms.length == 0">There are no new rooms to join!</p>
 			<ul id="available-rooms" v-bind:class="{ 'hide': hideAvailable }">
 				<li v-for="room in availableRooms">
-					<room-card :room="room"></room-card>
-					<br/>
-					<button v-if="room.admin" @click="requestAccessToRoom(room.name)" :disabled="~room.requests.indexOf(username) ? true : false">
+					<room-card :room="room" :username="username"></room-card>
+					<!--<button v-if="room.admin" @click="requestAccessToRoom(room.name)" :disabled="~room.requests.indexOf(username) ? true : false">
 						{{ ~room.requests.indexOf(username) ? "Waiting for request to be accepted" : "Request access" }}
 					</button>
-					<button v-else @click="joinRoom(room.name)">Join room</button>
+					<button v-else @click="joinRoom(room.name)">Join room</button>-->
 				</li>
 			</ul>
 		</div>
