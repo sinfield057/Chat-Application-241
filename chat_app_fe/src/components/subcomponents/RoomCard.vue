@@ -2,7 +2,7 @@
 	<v-card >
 		<v-card-row class="blue darken-1 white--text mt-3">
 			<v-card-title class="card-title">
-				<v-card-column class="text-xs-left headline ml-2"> {{ room.name }}</v-card-column>				
+				<v-card-column class="text-xs-left headline ml-2"> {{ room.name }}</v-card-column>
 				<v-card-column class="text-xs-right caption"> Members(TODO)</v-card-column>
 			</v-card-title>
 		</v-card-row>
@@ -12,7 +12,7 @@
 			</v-card-text>
 	</v-card>
 
-		
+
 </template>
 
 <script>
@@ -26,17 +26,3 @@ export default {
 }
 
 </script>
-
-<style scoped>
-	
-	.card-title{
-		padding:10px;
-	}
-/*	.card-title>{
-		margin:0px;
-		font-size:1.25rem;
-	}
-	.card-title>:last-child{
-		font-size:1rem;
-	}*/
-</style>
