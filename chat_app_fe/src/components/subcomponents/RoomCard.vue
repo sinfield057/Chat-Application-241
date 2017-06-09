@@ -1,11 +1,11 @@
 <template>
 	<v-card >
 		<!--linkul catre camera e momentan activ indiferent daca userul curent face parte sau nu din camera-->
-		<router-link :to="{ path: 'roomChat/' + room.name }">
+		<router-link :to="availableRoom ? {path: '/'} : { path: 'roomChat/' + room.name }">
 			<v-card-row class="blue darken-1 white--text mt-3">
 				<v-card-title class="card-title">
 					<v-card-column class="text-xs-left headline ml-2"> {{ room.name }}</v-card-column>
-					<v-card-column class="text-xs-right caption"> Members(TODO)</v-card-column>
+					<v-card-column class="text-xs-right caption">({{room.users.length}} members)</v-card-column>
 				</v-card-title>
 			</v-card-row>
 			<v-card-text>
@@ -14,10 +14,14 @@
 			</v-card-text>
 		</router-link>
 		<v-card-row v-if="availableRoom">
-			<button v-if="room.admin" @click="requestAccessToRoom(room.name)" :disabled="~room.requests.indexOf(username) ? true : false">
+			<v-btn v-if="room.admin" @click.native="requestAccessToRoom(room.name)" :disabled="~room.requests.indexOf(username) ? true : false" class="blue darken-1 white--text mt-3">
+				{{ ~room.requests.indexOf(username) ? "Waiting for request to be accepted" : "Request access" }}
+			</v-btn>
+			<v-btn v-else @click.native = "joinRoom(room.name)" class="blue darken-1 white--text mt-3">Join room</v-btn>
+			<!--<button v-if="room.admin" @click="requestAccessToRoom(room.name)" :disabled="~room.requests.indexOf(username) ? true : false">
 				{{ ~room.requests.indexOf(username) ? "Waiting for request to be accepted" : "Request access" }}
 			</button>
-			<button v-else @click="joinRoom(room.name)">Join room</button>
+			<button v-else @click="joinRoom(room.name)">Join room</button>-->
 		</v-card-row>
 	</v-card>
 
@@ -73,12 +77,13 @@ export default {
 					this.data = response.data.data;
 				}
 			});
-		},
+		}
+	},
+	computed: {
 		//as vrea sa folosesc functia asta ca sa determin daca camera ar face parte din availableRooms
 		availableRoom: function() {
-			console.log(this.room.name + (this.room.admin != this.username) + '&&' + (this.room.users.indexOf( this.username ) == -1) + '\n\n');
-			return this.room.admin != this.username &&
-				   this.room.users.indexOf( this.username ) == -1;
+			return (this.room.admin != this.username) &&
+				   (this.room.users.indexOf( this.username ) === -1);
 		}
 	}
 }
