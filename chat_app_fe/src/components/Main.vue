@@ -314,11 +314,10 @@ export default {
 		display: flex;
 		flex-wrap: nowrap;
 		width: 90%;
-		justify-content: space-between;
 		align-items: center;
 	}
 	.list-heading>hr{
 		display: inline-block;
-		width: 60%;
+		flex-grow: 1;
 	}
 </style>
