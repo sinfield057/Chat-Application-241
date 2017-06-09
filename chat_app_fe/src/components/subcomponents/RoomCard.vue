@@ -39,6 +39,7 @@ export default {
 	methods: {
 	    joinRoom(name) {
 	    	axios.post('/api/room/joinRoom', {
+				username: this.username,
 				name: name,
 			})
 			.then((response) => {
@@ -52,6 +53,7 @@ export default {
 
 		requestAccessToRoom(name) {
 	    	axios.post('/api/room/requestAccess', {
+				username: this.username,
 				name: name,
 				requester: this.username
 			})

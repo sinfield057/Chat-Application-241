@@ -197,6 +197,17 @@ export default {
 				});
 			},
 
+			deleteRequest(name, requester) {
+				const room = this.rooms.find(room => room.name == name);
+
+				if (room && room.requests) {
+					room.requests = room.requests.filter(request => request !== requester);
+					return true;
+				}
+
+				return false;
+			},
+
 			acceptRequest(name, requester) {
 				axios.post('/api/room/acceptRequest', {
 					username: this.username,
@@ -205,18 +216,7 @@ export default {
 				})
 				.then((response) => {
 					if (response.data.resolved) {
-						const room = this.rooms.find((room) => {
-							return room.name == name;
-						});
-
-						if (room && room.requests) {
-							const index = room.requests.find((request) => {
-								return request == requester;
-							});
-
-							room.requests.splice(index, 1);
-						}
-
+						this.deleteRequest(name, requester);
 					} else {
 						this.data = response.data.data;
 					}
@@ -231,17 +231,7 @@ export default {
 				})
 				.then((response) => {
 					if (response.data.resolved) {
-						const room = this.rooms.find((room) => {
-							return room.name == name;
-						});
-
-						if (room && room.requests) {
-							const index = room.requests.find((request) => {
-								return request == requester;
-							});
-
-							room.requests.splice(index, 1);
-						}
+						this.deleteRequest(name, requester);
 					} else {
 						this.data = response.data.data;
 					}
