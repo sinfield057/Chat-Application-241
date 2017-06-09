@@ -1,11 +1,10 @@
 <template>
 	<v-card >
-		<!--linkul catre camera e momentan activ indiferent daca userul curent face parte sau nu din camera-->
 		<router-link :to="availableRoom ? {path: '/'} : { path: 'roomChat/' + room.name }">
 			<v-card-row class="blue darken-1 white--text mt-3">
 				<v-card-title class="card-title">
-					<v-card-column class="text-xs-left headline ml-2"> {{ room.name }}</v-card-column>
-					<v-card-column class="text-xs-right caption">({{room.users.length}} members)</v-card-column>
+					<span class="text-xs-left headline ml-2 room-name"> {{ room.name }}</span>
+					<span class="text-xs-right caption members">({{room.users.length}} members)</span>
 				</v-card-title>
 			</v-card-row>
 			<v-card-text>
@@ -18,10 +17,6 @@
 				{{ ~room.requests.indexOf(username) ? "Waiting for request to be accepted" : "Request access" }}
 			</v-btn>
 			<v-btn v-else @click.native = "joinRoom(room.name)" class="blue darken-1 white--text mt-3">Join room</v-btn>
-			<!--<button v-if="room.admin" @click="requestAccessToRoom(room.name)" :disabled="~room.requests.indexOf(username) ? true : false">
-				{{ ~room.requests.indexOf(username) ? "Waiting for request to be accepted" : "Request access" }}
-			</button>
-			<button v-else @click="joinRoom(room.name)">Join room</button>-->
 		</v-card-row>
 	</v-card>
 
@@ -48,11 +43,7 @@ export default {
 			})
 			.then((response) => {
 				if (response.data.resolved) {
-					const room = this.rooms.find((room) => {
-						return room.name == name;
-					});
-
-					room.users.push(this.username);
+					this.room.users.push(this.username);
 				} else {
 					this.data = response.data.data;
 				}
@@ -66,12 +57,8 @@ export default {
 			})
 			.then((response) => {
 				if (response.data.resolved) {
-					const room = this.rooms.find((room) => {
-						return room.name == name;
-					});
-
-					if (room && room.requests) {
-						room.requests.push(this.username);
+					if (this.room && this.room.requests) {
+						this.room.requests.push(this.username);
 					}
 				} else {
 					this.data = response.data.data;
@@ -80,7 +67,6 @@ export default {
 		}
 	},
 	computed: {
-		//as vrea sa folosesc functia asta ca sa determin daca camera ar face parte din availableRooms
 		availableRoom: function() {
 			return (this.room.admin != this.username) &&
 				   (this.room.users.indexOf( this.username ) === -1);
@@ -91,6 +77,18 @@ export default {
 </script>
 
 <style scoped>
+	.card-title{
+		display: flex;
+		flex-wrap: nowrap;
+	}
+	.room-name{
+		flex-grow:2;
+		flex-shrink:1;
+	}
+	.members{
+		flex-grow:1;
+		flex-shrink:2;
+	}
 	a {
 		text-decoration: none;
 		color: inherit;
