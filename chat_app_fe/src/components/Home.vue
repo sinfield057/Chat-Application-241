@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="home" @keyup.enter="doLogin">
   	<img src="../assets/logo2.png" id="logo">
 
     <h3>Chat App</h3>
@@ -19,11 +19,11 @@
               class="input-group--focused  "
               v-model="password"
             > </v-text-field>
-      </div>   
-    
+      </div>
+
         <v-btn  class="blue darken-1 white--text mt-3" name="login-button"  @click.native="doLogin">Login</v-btn>
         <v-btn  class="grey lighten-1 mt-3" name="register-button"  @click.native="doRegister">Register</v-btn>
-    
+
     <p>{{ data }}</p>
   </div>
 </template>
@@ -48,7 +48,7 @@ export default {
         moderatedRooms: []
       }
   },
-  
+
   methods: {
 
     doLogin() {
@@ -59,7 +59,7 @@ export default {
            .then( ( response ) => {
             this.data = response.data.data;
             if ( response.data.resolved == true ) {
-              router.push('/main');   
+              router.push('/main');
             }
            })
            .catch( ( err ) => {
@@ -94,9 +94,6 @@ export default {
   justify-content: center;
   flex-direction:column;
   margin: auto;
-}
-#logo{
-  margin-top: -50px;
 }
 
 </style>

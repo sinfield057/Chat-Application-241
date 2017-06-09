@@ -1,19 +1,40 @@
 <template>
 	<div class="createRoom">
-		<h1>Create Room</h1>
-		<br />
-		<p>Room Name:</p>
-		<input type="text" name="room-name" placeholder="Enter room name" v-model="name">
-		<br />
-		<p>Room Description</p>
-		<textarea name="create-room-button" v-model="description"></textarea>
-		<br />
-		<input type="checkbox" name="create-room-checkbox" v-model="isPublic">Public room</input>
-		<br />
-		<input type="button" name="create-room" value="Create room" @click="createRoom">
-<!-- 		<input type="button" name="logout-button" value="Logout" @click="logout">	 -->
-		<br />
-		<router-link :to=" 'main' ">Back to main</router-link>
+		<v-card >
+			<v-card-row class="blue darken-1 white--text mt-3">
+				<v-card-title class="card-title">
+					<v-card-column class="text-md-center display-2 ml-2"> Create Room</v-card-column>				
+				</v-card-title>
+			</v-card-row>			
+			
+			<v-card-text class ="grey lighten-4">	
+			<v-text-field
+				name="Room Name"
+				label ="Room Name"
+				type="text"			
+				class="input-group body-1"
+				v-model="name"								
+			></v-text-field>
+			<v-divider></v-divider>
+			<br />	
+				<v-text-field
+				name="Room Description"
+				label ="Room Description"
+				type="text"			
+				class="input-group body-1"
+				v-model="description"
+				multi-line			
+				rows = "3"
+			></v-text-field>		
+			<br />
+			<v-divider></v-divider>
+			<input type="checkbox" name="create-room-checkbox" v-model="isPublic" >Public room</input>
+			<br />
+			<v-btn  class="blue darken-1 white--text mt-3" name="create-room" value ="Create Room" @click.native="createRoom">Create Room</v-btn>
+			<br />
+			<router-link :to=" 'main' ">Back to main</router-link>
+			<v-card-text>
+		</v-card >
 	</div>
 </template>
 
@@ -28,7 +49,7 @@ export default {
 	data() {
 		return {
 			username: '',
-			sessionValid: false,
+			sessionValid: false,		
 			data: '',
 			name: '',
 			description: '',
@@ -53,7 +74,7 @@ export default {
 	      axios.get( '/api/user/validate' )
 	           .then( ( response ) => {
 	              if ( response.data.resolved ) {
-	                this.sessionValid = true;
+	                this.sessionValid = true;	               
 	                this.username = response.data.username;
 	              } else {
 	              	this.logout();
@@ -87,3 +108,12 @@ export default {
 }
 	
 </script>
+<style scoped>
+.createRoom{
+		width: 50%;  
+		height: 70%;
+		justify-content: center;
+		margin: auto;
+	
+	}
+</style>
