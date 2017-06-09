@@ -3,8 +3,8 @@
 		<router-link :to="availableRoom ? {path: '/'} : { path: 'roomChat/' + room.name }">
 			<v-card-row class="blue darken-1 white--text mt-3">
 				<v-card-title class="card-title">
-					<v-card-column class="text-xs-left headline ml-2"> {{ room.name }}</v-card-column>
-					<v-card-column class="text-xs-right caption">({{room.users.length}} members)</v-card-column>
+					<span class="text-xs-left headline ml-2 room-name"> {{ room.name }}</span>
+					<span class="text-xs-right caption members">({{room.users.length}} members)</span>
 				</v-card-title>
 			</v-card-row>
 			<v-card-text>
@@ -77,6 +77,18 @@ export default {
 </script>
 
 <style scoped>
+	.card-title{
+		display: flex;
+		flex-wrap: nowrap;
+	}
+	.room-name{
+		flex-grow:2;
+		flex-shrink:1;
+	}
+	.members{
+		flex-grow:1;
+		flex-shrink:2;
+	}
 	a {
 		text-decoration: none;
 		color: inherit;
