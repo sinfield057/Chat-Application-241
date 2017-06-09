@@ -187,7 +187,6 @@ router.post('/joinRoom', (req, res) => {
 router.post('/requestAccess', (req, res) => {
 	const username = req.body.username;
 	const name = req.body.name;
-	const requester = req.body.requester;
 
 	if (req.session.username && req.session.username == username) {
 		Room.findOne(
@@ -201,14 +200,14 @@ router.post('/requestAccess', (req, res) => {
 					resolved: false
 				})
 			} else if (room) {
-					if (~room.requests.indexOf(requester)) {
+					if (~room.requests.indexOf(username)) {
 						res.send({
-							data: "User " + requester + " already requested access to room " + name,
+							data: "User " + username + " already requested access to room " + name,
 							resolved: false
 						});
 					} else {
 						let updatedRequests = room.requests;
-						updatedRequests.push(requester);
+						updatedRequests.push(username);
 
 						Room.update(
 							{
@@ -252,7 +251,7 @@ router.post('/requestAccess', (req, res) => {
 router.post('/acceptRequest', (req, res) => {
 	const username = req.body.username;
 	const name = req.body.name;
-	const requester = req.body.requester;	
+	const requester = req.body.requester;
 
 	if (req.session.username && req.session.username == username) {
 		Room.findOne(

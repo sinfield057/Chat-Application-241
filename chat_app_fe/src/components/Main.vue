@@ -174,7 +174,6 @@ export default {
 				axios.post('/api/room/requestAccess', {
 					username: this.username,
 					name: name,
-					requester: this.username
 				})
 				.then((response) => {
 					if (response.data.resolved) {
