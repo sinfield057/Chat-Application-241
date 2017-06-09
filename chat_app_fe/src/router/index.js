@@ -4,6 +4,7 @@ import Home from '@/components/Home'
 import Main from '@/components/Main'
 import Register from '@/components/Register'
 import CreateRoom from '@/components/CreateRoom'
+import RoomChat from '@/components/RoomChat'
 
 Vue.use(Router)
 
@@ -29,6 +30,12 @@ export default new Router({
       path: '/createRoom',
       name: 'CreateRoom',
       component: CreateRoom
+    },
+    {
+      path: '/roomChat/:roomName',
+      name: 'RoomChat',
+      component: RoomChat,
+      props: true
     }
   ]
 })
