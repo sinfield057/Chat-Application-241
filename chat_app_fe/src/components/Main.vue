@@ -109,12 +109,14 @@ export default {
 	    		 } );
 	    },
 
-		getSessionInfo() {
+		getData() {
 			axios.get('/api/user/validate')
 			.then((response) => {
 				if (response.data.resolved) {
 					this.sessionValid = true;
 					this.username = response.data.username;
+
+					this.getRooms();
 				} else {
 					this.logout();
 				}
@@ -122,16 +124,17 @@ export default {
 		},
 
 	    getRooms() {
-	      const self = this;
-
-	      axios.get( '/api/room/getRooms' )
-	           .then( ( response ) => {
-	              if( response.data.resolved == true ) {
-	                self.rooms = response.data.data;
-	              } else {
-	                self.rooms = response.data.data;
-	              }
-	           } ); 
+				axios.post('/api/room/getRooms',
+				{
+					username: this.username
+				})
+					.then(response => {
+						if (response.data.resolved) {
+							this.rooms = response.data.data;
+						} else {
+							this.data = response.data.data;
+						}
+					});
 	    },
 
 	    toggleModerated() {
@@ -151,7 +154,8 @@ export default {
 
 			joinRoom(name) {
 				axios.post('/api/room/joinRoom', {
-					name: name,
+					username: this.username,
+					name: name
 				})
 				.then((response) => {
 					if (response.data.resolved) {
@@ -168,8 +172,8 @@ export default {
 
 			requestAccessToRoom(name) {
 				axios.post('/api/room/requestAccess', {
+					username: this.username,
 					name: name,
-					requester: this.username
 				})
 				.then((response) => {
 					if (response.data.resolved) {
@@ -188,6 +192,7 @@ export default {
 
 			acceptRequest(name, requester) {
 				axios.post('/api/room/acceptRequest', {
+					username: this.username,
 					name: name,
 					requester: requester
 				})
@@ -213,6 +218,7 @@ export default {
 
 			declineRequest(name, requester) {
 				axios.post('/api/room/declineRequest', {
+					username: this.username,
 					name: name,
 					requester: requester
 				})
@@ -265,8 +271,7 @@ export default {
 	},
 
 	beforeMount() {
-		this.getSessionInfo();
-		this.getRooms();
+		this.getData();
 	}
 }
 	

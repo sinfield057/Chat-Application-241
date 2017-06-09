@@ -49,7 +49,7 @@ export default {
 	    		 } );
 	    },
 
-		getSessionInfo() {
+		getData() {
 	      axios.get( '/api/user/validate' )
 	           .then( ( response ) => {
 	              if ( response.data.resolved ) {
@@ -63,6 +63,7 @@ export default {
 
 	    createRoom() {
 	    	axios.post( '/api/room/createRoom', {
+					username: this.username,
 	    		name: this.name,
 	    		description: this.description,
 					isPublic: this.isPublic
@@ -81,7 +82,7 @@ export default {
 	},
 
 	beforeMount() {
-		this.getSessionInfo();
+		this.getData();
 	}
 }
 	

@@ -33,7 +33,7 @@ export default {
   },
 
   methods: {
-    getSessionInfo() {
+    getData() {
       axios.get('/api/user/validate')
       .then((response) => {
         if (response.data.resolved) {
@@ -50,6 +50,7 @@ export default {
 
     getRoom() {
       axios.post('/api/room/getRoom', {
+        username: this.username,
         name: this.roomName
       })
       .then((response) => {
@@ -63,7 +64,7 @@ export default {
   },
 
   beforeMount() {
-		this.getSessionInfo();
+		this.getData();
 	}
 }
 </script>

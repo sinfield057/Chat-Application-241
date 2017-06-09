@@ -7,13 +7,12 @@ import mongoose from 'mongoose'
 const router = express.Router();
 
 router.post( '/createRoom' , ( req, res ) => {
-	const username = req.session.username;
+	const username = req.body.username;
 	const name = req.body.name;
 	const description = req.body.description;
 	const isPublic = req.body.isPublic;
 
-	if (username != undefined) {
-
+	if (req.session.username && username == req.session.username) {
 		Room.findOne( {
 			name: name 
 		}, 
@@ -61,10 +60,10 @@ router.post( '/createRoom' , ( req, res ) => {
 	}
 } );
 
-router.get( '/getRooms', ( req, res ) => {
-	const username = req.session.username;
-	
-	if( typeof username !== 'undefined' ) {
+router.post( '/getRooms', ( req, res ) => {
+	const username = req.body.username;
+
+	if (req.session.username && req.session.username == username) {
 		Room.find( {}, 
 				   '_id name description users admin requests createdAt', 
 		( err, rooms ) => {
@@ -90,10 +89,10 @@ router.get( '/getRooms', ( req, res ) => {
 } );
 
 router.post('/getRoom', (req, res) => {
-	const username = req.session.username;
+	const username = req.body.username;
 	const name = req.body.name;
 
-	if (username !== undefined) {
+	if (req.session.username && req.session.username == username) {
 		Room.findOne({
 			name: name
 		}, '_id name description users admin requests createdAt',
@@ -131,10 +130,10 @@ router.post('/getRoom', (req, res) => {
 });
 
 router.post('/joinRoom', (req, res) => {
-	const username = req.session.username;
+	const username = req.body.username;
 	const name = req.body.name;
 
-	if (username != undefined) {
+	if (req.session.username && req.session.username == username) {
 		Room.findOne({
 				name: name
 			},
@@ -186,10 +185,11 @@ router.post('/joinRoom', (req, res) => {
 });
 
 router.post('/requestAccess', (req, res) => {
+	const username = req.body.username;
 	const name = req.body.name;
-	const requester = req.body.requester;
 
-	Room.findOne(
+	if (req.session.username && req.session.username == username) {
+		Room.findOne(
 		{
 			name: name
 		},
@@ -200,14 +200,14 @@ router.post('/requestAccess', (req, res) => {
 					resolved: false
 				})
 			} else if (room) {
-					if (~room.requests.indexOf(requester)) {
+					if (~room.requests.indexOf(username)) {
 						res.send({
-							data: "User " + requester + " already requested access to room " + name,
+							data: "User " + username + " already requested access to room " + name,
 							resolved: false
 						});
 					} else {
 						let updatedRequests = room.requests;
-						updatedRequests.push(requester);
+						updatedRequests.push(username);
 
 						Room.update(
 							{
@@ -237,16 +237,24 @@ router.post('/requestAccess', (req, res) => {
 					resolved: false
 				});
 			}
-		}
-	);
+		});
+	} else {
+		res.send(
+			{
+				data: "Invalid session",
+				resolved: false
+			}
+		);
+	}
 });
 
 router.post('/acceptRequest', (req, res) => {
-	const username = req.session.username;
+	const username = req.body.username;
 	const name = req.body.name;
 	const requester = req.body.requester;
 
-	Room.findOne(
+	if (req.session.username && req.session.username == username) {
+		Room.findOne(
 		{
 			name: name
 		},
@@ -300,16 +308,24 @@ router.post('/acceptRequest', (req, res) => {
 					resolved: false
 				});
 			}
-		}
-	);
+		});
+	} else {
+		res.send(
+			{
+				data: "Invalid session",
+				resolved: false
+			}
+		);
+	}
 });
 
 router.post('/declineRequest', (req, res) => {
-	const username = req.session.username;
+	const username = req.body.username;
 	const name = req.body.name;
-	const requester = req.body.requester;
+	const requester = req.body.requester;	
 
-	Room.findOne(
+	if (req.session.username && req.session.username == username) {
+		Room.findOne(
 		{
 			name: name
 		},
@@ -359,8 +375,15 @@ router.post('/declineRequest', (req, res) => {
 					resolved: false
 				});
 			}
-		}
-	);
+		});
+	} else {
+		res.send(
+			{
+				data: "Invalid session",
+				resolved: false
+			}
+		);
+	}
 });
 
 
