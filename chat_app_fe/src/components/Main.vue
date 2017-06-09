@@ -17,17 +17,16 @@
 			<input type="button" v-if="moderatedRooms.length != 0" v-bind:value="toggleModeratedValue" @click="toggleModerated">
 		</div>
 		<div class="room-list grey lighten-4">
-			<p v-if="moderatedRooms.length == 0">You aren't moderating any rooms!</p>
+			<p v-if="moderatedRooms.length == 0" class="pa-4">You aren't moderating any rooms!</p>
 			<ul id="moderated-rooms" v-bind:class="{ 'hide': hideModerated }">
 				<li v-for="room in moderatedRooms">
-				<room-card :room="room"></room-card>
-					<p v-if="room.requests.length">Requests: </p>
+				<room-card :room="room" :username = "username"></room-card>
+					<p v-if="room.requests.length" class ="headline pa-2 mb-0">Requests: </p>
 					<ul v-if="room.requests">
 						<li v-for="request in room.requests">
-							{{ request }}
-							</br>
-							<button v-on:click="acceptRequest(room.name, request)">Accept request</button>
-							<button v-on:click="declineRequest(room.name, request)">Decline request</button>
+							<span class = "title">User: {{ request }}</span>
+							<v-btn @click.native="acceptRequest(room.name,request)" class="blue darken-1 white--text">Accept request</v-btn>
+							<v-btn @click.native="declineRequest(room.name,request)" class="grey lighten-1">Decline request</v-btn>
 						</li>
 					</ul>
 				</li>
@@ -41,10 +40,10 @@
 			<input type="button" v-if="joinedRooms.length != 0" v-bind:value="toggleJoinedValue" @click="toggleJoined">
 		</div>
 		<div class="room-list grey lighten-4">
-			<p v-if="joinedRooms.length == 0">You haven't joined any rooms yet!</p>
+			<p v-if="joinedRooms.length == 0" class="pa-4">You haven't joined any rooms yet!</p>
 			<ul id="joined-rooms" v-bind:class="{ 'hide': hideJoined }">
 				<li v-for="room in joinedRooms">
-					<room-card :room="room"></room-card>
+					<room-card :room="room" :username = "username"></room-card>
 				</li>
 			</ul>
 		</div>
@@ -56,7 +55,7 @@
 			<input type="button" v-if="availableRooms.length != 0" v-bind:value="toggleAvailableValue" @click="toggleAvailable">
 		</div>
 		<div class="room-list grey lighten-4">
-			<p v-if="availableRooms.length == 0">There are no new rooms to join!</p>
+			<p v-if="availableRooms.length == 0" class="pa-4">There are no new rooms to join!</p>
 			<ul id="available-rooms" v-bind:class="{ 'hide': hideAvailable }">
 				<li v-for="room in availableRooms">
 					<room-card :room="room" :username="username"></room-card>
@@ -307,8 +306,8 @@ export default {
 	.room-list{
 		width:90%;
 		margin: 0 auto;
-		padding-left: 5%;
-		padding-right: 5%;
+		padding-left: 10%;
+		padding-right: 10%;
 	}
 	.list-heading{
 		margin: 0 auto;
