@@ -33,7 +33,9 @@ new Vue({
   		console.log( val );
   	},
     recieveMessage: function( payload ) {
-      console.log('recieve message: ', payload);
+      if( store.state.room == payload.room ) {
+        store.commit( 'pushNewMessage', payload );
+      }
     }
   },
 })

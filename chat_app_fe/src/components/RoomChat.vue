@@ -1,8 +1,6 @@
 <template>
 <div class="roomChat">
   <h3> {{ roomName }} </h3>
-  <input type="text" name="message-send" placeholder="Enter Message" v-model="message">
-  <button v-on:click="sendMessage()">Send</button>
   <h4> Users <h4>
   <ul v-if="room" class="roomUsers">
     <li v-for="user in room.users"> {{ user }} </li>
@@ -12,6 +10,14 @@
   <ul v-if="room" class="roomRequests">
     <li v-for="request in room.requests"> {{ request }} </li>
   </ul>
+  <br />
+  <div>
+    <ul>
+      <li v-for="message in messages"> {{ message.sender }}: {{ message.message }} </li>
+    </ul>
+  </div>
+  <input type="text" name="message-send" placeholder="Enter Message" v-model="message">
+  <button v-on:click="sendMessage()">Send</button>
 </div>
 </template>
 
@@ -31,9 +37,11 @@ export default {
 			sessionValid: false,
 			userId: '',
 			data: '',
-      message: ''
-			data: '',
+      message: '',
       room: null,
+      messages: [],
+      currentRoom: ''
+ 
     }
   },
 
@@ -43,8 +51,7 @@ export default {
       .then((response) => {
         if (response.data.resolved) {
           this.username = response.data.username;          
-          this.sessionValid = true;
-          
+          this.sessionValid = true;    
           this.getRoom();
         } else {
           router.push('/');
@@ -61,7 +68,7 @@ export default {
       }
       this.$socket.emit( 'sendMessage', payload );
       this.message = '';
-    }
+    },
 
     getRoom() {
       axios.post('/api/room/getRoom', {
@@ -71,6 +78,8 @@ export default {
       .then((response) => {
         if (response.data.resolved) {
           this.room = response.data.data;
+          this.$store.commit( 'addMessageList', this.room.messages );
+          this.$store.commit( 'changeRoom', this.room.name );
         } else {
           this.data = response.data.data;
         }
@@ -80,7 +89,16 @@ export default {
 
   beforeMount() {
 		this.getData();
-	}
+	},
+
+  mounted() {
+    this.$store.watch( state => {
+      return state.messages;
+    }, 
+    messageList => {
+      this.messages = messageList;
+    })
+  }
 }
 
 </script>

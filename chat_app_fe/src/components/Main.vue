@@ -117,6 +117,7 @@ export default {
 	    },
 
 		getData() {
+			const self = this;
 			axios.get('/api/user/validate')
 			.then((response) => {
 				if (response.data.resolved) {

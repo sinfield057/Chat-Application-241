@@ -98,7 +98,7 @@ router.post('/getRoom', (req, res) => {
 	if (req.session.username && req.session.username == username) {
 		Room.findOne({
 			name: name
-		}, '_id name description users admin requests createdAt',
+		}, '_id name description users admin requests createdAt messages',
 		(err, room) => {
 			if (err) {
 				res.send({
@@ -107,6 +107,7 @@ router.post('/getRoom', (req, res) => {
 				});
 			} else if (room) {
 				if (~room.users.indexOf(username)) {
+					console.log( room );
 					res.send({
 						data: room,
 						resolved: true

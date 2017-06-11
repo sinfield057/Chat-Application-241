@@ -65,7 +65,7 @@ socket.on( 'connect', client => {
 		const newMessage = {
 			sender: payload.sender,
 			message: payload.message,
-			dateSent: payload.date
+			dateSent: Date.now()
 		};
 
 		Room.findOneAndUpdate( { 

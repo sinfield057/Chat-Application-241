@@ -8,7 +8,7 @@ const roomSchema = new Schema( {
 	messages: [ { 
 		sender: String,
 		message: String,
-		dateSent: Date
+		dateSent: { type: Date }
 	} ],
 	users: [ String ],
 	admin: String,
