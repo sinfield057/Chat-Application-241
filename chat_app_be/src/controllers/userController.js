@@ -68,48 +68,59 @@ router.get( '/logout', ( req, res ) => {
 } );
 
 router.post( '/register', ( req, res ) => {
-	const username = req.body.username,
-		  password = md5( req.body.password );
+	const username = req.body.username;
+	const password = req.body.password;
 
-	User.findOne( {
-		username: username
-	}, 
-	( err, foundUser ) => {
-		if ( err ) {
-			res.send( {
-				data: "Database Error: " + err,
-				resolved: false
-			} );
-		} else if ( foundUser ) {
-			res.send( {
-				data: 'Username already in use!',
-				resolved: false
-			} );
-		} else {
-			const newUser = new User( {
-				_id: mongoose.mongo.ObjectId(),
-				username: username,
-				password: password,
-				createdAt: Date.now(),
-				lastLogin: Date.now()
-			} );
+	if (username.length && password.length) {
+			password = md5(password);
+			
+			User.findOne( {
+			username: username
+		}, 
+		( err, foundUser ) => {
+			if ( err ) {
+				res.send( {
+					data: "Database Error: " + err,
+					resolved: false
+				} );
+			} else if ( foundUser ) {
+				res.send( {
+					data: 'Username already in use!',
+					resolved: false
+				} );
+			} else {
+				const newUser = new User( {
+					_id: mongoose.mongo.ObjectId(),
+					username: username,
+					password: password,
+					createdAt: Date.now(),
+					lastLogin: Date.now()
+				} );
 
-			newUser.save( 
-			( err ) => {
-				if ( err ) {
-					res.send( { 
-						data: "Database error while saving: " + err,
-						resolved: false
-					} );
-				} else {
-					res.send( { 
-						data: 'User successfully created!',
-						resolved: true
-					} );
-				}
-			} );
-		}
-	} );
+				newUser.save( 
+				( err ) => {
+					if ( err ) {
+						res.send( { 
+							data: "Database error while saving: " + err,
+							resolved: false
+						} );
+					} else {
+						res.send( { 
+							data: 'User successfully created!',
+							resolved: true
+						} );
+					}
+				} );
+			}
+		} );
+	} else {
+		res.send(
+			{
+				data: "Username or password length is too short",
+				resolved: false
+			}
+		);
+	}
 } );
 
 router.get( '/validate', ( req, res ) => {
@@ -127,9 +138,8 @@ router.get( '/validate', ( req, res ) => {
 		} else {
 			if ( foundUser && foundUser.username == username) {
 				res.send( {
+					username: username,					
 					resolved: true,
-					username: username,
-					userId: userId
 				} );
 			} else {
 				res.send( {

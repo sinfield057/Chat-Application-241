@@ -9,13 +9,13 @@ const router = express.Router();
 
 
 router.post( '/createRoom' , ( req, res ) => {
-	const userId 	  	= req.body.userId,
-		  	name   	  	= req.body.name,
-		  	description = req.body.description,
-			isPublic 	= req.body.isPublic;
 
-	if ( userId == req.session.userId ) {
+	const username = req.body.username;
+	const name = req.body.name;
+	const description = req.body.description;
+	const isPublic = req.body.isPublic;
 
+	if (req.session.username && username == req.session.username) {
 		Room.findOne( {
 			name: name 
 		}, 
@@ -35,8 +35,8 @@ router.post( '/createRoom' , ( req, res ) => {
 					_id: mongoose.mongo.ObjectId(),
 					name: name,
 					description: description,
-					admin: !isPublic ? userId : null,
-					users: [ userId ],
+					admin: !isPublic ? username : null,
+					users: [ username ],
 					createdAt: Date.now()
 				} );
 
@@ -63,10 +63,10 @@ router.post( '/createRoom' , ( req, res ) => {
 	}
 } );
 
-router.get( '/getRooms', ( req, res ) => {
-	const userId = req.session.userId;
-	
-	if( typeof userId !== 'undefined' ) {
+router.post( '/getRooms', ( req, res ) => {
+	const username = req.body.username;
+
+	if (req.session.username && req.session.username == username) {
 		Room.find( {}, 
 				   '_id name description users admin requests createdAt', 
 		( err, rooms ) => {
@@ -91,11 +91,52 @@ router.get( '/getRooms', ( req, res ) => {
 
 } );
 
-router.post('/joinRoom', (req, res) => {
-	const userId = req.session.userId;
+router.post('/getRoom', (req, res) => {
+	const username = req.body.username;
 	const name = req.body.name;
 
-	if (userId !== undefined) {
+	if (req.session.username && req.session.username == username) {
+		Room.findOne({
+			name: name
+		}, '_id name description users admin requests createdAt',
+		(err, room) => {
+			if (err) {
+				res.send({
+					data: "Database error: " + err,
+					resolved: false
+				});
+			} else if (room) {
+				if (~room.users.indexOf(username)) {
+					res.send({
+						data: room,
+						resolved: true
+					});
+				} else {
+					res.send({
+						data: "User " + username + " has not joined room " + name,
+						resolved: false
+					});
+				}
+			} else {
+				res.send({
+					data: "Room " + name + " not found",
+					resolved: false
+				});
+			}
+		});
+	} else {
+		res.send({
+			data: "Invalid session",
+			reoslved: false
+		});
+	}
+});
+
+router.post('/joinRoom', (req, res) => {
+	const username = req.body.username;
+	const name = req.body.name;
+
+	if (req.session.username && req.session.username == username) {
 		Room.findOne({
 				name: name
 			},
@@ -108,7 +149,7 @@ router.post('/joinRoom', (req, res) => {
 				}
 				else if (room) {
 					let updatedUsers = room.users;
-					updatedUsers.push(userId);
+					updatedUsers.push(username);
 
 					Room.update(
 					{
@@ -147,10 +188,11 @@ router.post('/joinRoom', (req, res) => {
 });
 
 router.post('/requestAccess', (req, res) => {
+	const username = req.body.username;
 	const name = req.body.name;
-	const requesterId = req.body.requesterId;
 
-	Room.findOne(
+	if (req.session.username && req.session.username == username) {
+		Room.findOne(
 		{
 			name: name
 		},
@@ -161,14 +203,14 @@ router.post('/requestAccess', (req, res) => {
 					resolved: false
 				})
 			} else if (room) {
-					if (~room.requests.indexOf(requesterId)) {
+					if (~room.requests.indexOf(username)) {
 						res.send({
-							data: "User with id: " + requesterId + " already requested access to room " + name,
+							data: "User " + username + " already requested access to room " + name,
 							resolved: false
 						});
 					} else {
 						let updatedRequests = room.requests;
-						updatedRequests.push(requesterId);
+						updatedRequests.push(username);
 
 						Room.update(
 							{
@@ -198,16 +240,24 @@ router.post('/requestAccess', (req, res) => {
 					resolved: false
 				});
 			}
-		}
-	);
+		});
+	} else {
+		res.send(
+			{
+				data: "Invalid session",
+				resolved: false
+			}
+		);
+	}
 });
 
 router.post('/acceptRequest', (req, res) => {
-	const userId = req.session.userId;
+	const username = req.body.username;
 	const name = req.body.name;
-	const requesterId = req.body.requesterId;
+	const requester = req.body.requester;
 
-	Room.findOne(
+	if (req.session.username && req.session.username == username) {
+		Room.findOne(
 		{
 			name: name
 		},
@@ -218,14 +268,14 @@ router.post('/acceptRequest', (req, res) => {
 					resolved: false
 				});
 			} else if (room) {
-				const index = room.requests.indexOf(requesterId);
+				const index = room.requests.indexOf(requester);
 
-				if (room.admin == userId && ~index) {
+				if (room.admin == username && ~index) {
 					let updatedRequests = room.requests;
 					let updatedUsers = room.users;
 
 					updatedRequests.splice(index, 1);
-					updatedUsers.push(requesterId);
+					updatedUsers.push(requester);
 
 					Room.update(
 						{
@@ -261,16 +311,24 @@ router.post('/acceptRequest', (req, res) => {
 					resolved: false
 				});
 			}
-		}
-	);
+		});
+	} else {
+		res.send(
+			{
+				data: "Invalid session",
+				resolved: false
+			}
+		);
+	}
 });
 
 router.post('/declineRequest', (req, res) => {
-	const userId = req.session.userId;
+	const username = req.body.username;
 	const name = req.body.name;
-	const requesterId = req.body.requesterId;
+	const requester = req.body.requester;	
 
-	Room.findOne(
+	if (req.session.username && req.session.username == username) {
+		Room.findOne(
 		{
 			name: name
 		},
@@ -281,9 +339,9 @@ router.post('/declineRequest', (req, res) => {
 					resolved: false
 				});
 			} else if (room) {
-				const index = room.requests.indexOf(requesterId);
+				const index = room.requests.indexOf(requester);
 
-				if (room.admin == userId && ~index) {
+				if (room.admin == username && ~index) {
 					let updatedRequests = room.requests;
 					updatedRequests.splice(index, 1);
 
@@ -320,8 +378,15 @@ router.post('/declineRequest', (req, res) => {
 					resolved: false
 				});
 			}
-		}
-	);
+		});
+	} else {
+		res.send(
+			{
+				data: "Invalid session",
+				resolved: false
+			}
+		);
+	}
 });
 
 
