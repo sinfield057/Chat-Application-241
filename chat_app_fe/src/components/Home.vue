@@ -60,7 +60,6 @@ export default {
             password: this.password
           })
            .then( ( response ) => {
-            this.data = response.data.data;
             if ( response.data.resolved == true ) {
               router.push('/main');
             }
