@@ -54,6 +54,7 @@ export default {
   methods: {
 
     doLogin() {
+      const self = this;
       document.getElementById('alert').style.visibility = 'visible';      
       axios.post( '/api/user/login', {
             username: this.username,
@@ -61,7 +62,12 @@ export default {
           })
            .then( ( response ) => {
             if ( response.data.resolved == true ) {
-              router.push('/main');
+              self.$socket.emit( 'connect', this.username );            
+              self.$options.sockets.welcome = ( data ) => {
+                console.log( data );
+              }
+              
+              router.push('/main');   
             }
            })
            .catch( ( err ) => {

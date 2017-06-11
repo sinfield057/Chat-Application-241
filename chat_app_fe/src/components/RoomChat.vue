@@ -10,6 +10,14 @@
   <ul v-if="room" class="roomRequests">
     <li v-for="request in room.requests"> {{ request }} </li>
   </ul>
+  <br />
+  <div>
+    <ul>
+      <li v-for="message in messages"> {{ message.sender }}: {{ message.message }} </li>
+    </ul>
+  </div>
+  <input type="text" name="message-send" placeholder="Enter Message" v-model="message">
+  <button v-on:click="sendMessage()">Send</button>
 </div>
 </template>
 
@@ -27,8 +35,13 @@ export default {
     return {
       username: '',
 			sessionValid: false,
+			userId: '',
 			data: '',
+      message: '',
       room: null,
+      messages: [],
+      currentRoom: ''
+ 
     }
   },
 
@@ -38,13 +51,23 @@ export default {
       .then((response) => {
         if (response.data.resolved) {
           this.username = response.data.username;          
-          this.sessionValid = true;
-          
+          this.sessionValid = true;    
           this.getRoom();
         } else {
           router.push('/');
         }
       });
+    },
+
+    sendMessage() {
+      const payload = {
+        sender: this.username,
+        message: this.message,
+        dateSent: Date.now(),
+        room: this.roomName
+      }
+      this.$socket.emit( 'sendMessage', payload );
+      this.message = '';
     },
 
     getRoom() {
@@ -55,6 +78,8 @@ export default {
       .then((response) => {
         if (response.data.resolved) {
           this.room = response.data.data;
+          this.$store.commit( 'addMessageList', this.room.messages );
+          this.$store.commit( 'changeRoom', this.room.name );
         } else {
           router.push('/');
         }
@@ -64,8 +89,18 @@ export default {
 
   beforeMount() {
 		this.getData();
-	}
+	},
+
+  mounted() {
+    this.$store.watch( state => {
+      return state.messages;
+    }, 
+    messageList => {
+      this.messages = messageList;
+    })
+  }
 }
+
 </script>
 
 <style scoped>

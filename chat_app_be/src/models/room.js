@@ -5,6 +5,11 @@ const roomSchema = new Schema( {
 	_id: Schema.Types.ObjectId,
 	name: String,
 	description: String,
+	messages: [ { 
+		sender: String,
+		message: String,
+		dateSent: { type: Date }
+	} ],
 	users: [ String ],
 	admin: String,
 	requests: [ String ],

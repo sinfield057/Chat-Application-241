@@ -117,18 +117,22 @@ export default {
 	    },
 
 		getData() {
+			const self = this;
 			axios.get('/api/user/validate')
 			.then((response) => {
 				if (response.data.resolved) {
 					this.sessionValid = true;
 					this.username = response.data.username;
-
-					this.getRooms();
-				} else {
-					this.logout();
-				}
-			});
-		},
+	                self.sessionValid = true;
+	                self.userId = response.data.userId;
+	                self.username = response.data.username;
+	                this.getRooms();
+	                self.$store.commit( 'changeUsername', self.username );
+	              } else {
+	              	self.logout();
+	              }
+	           } );
+	    },
 
 	    getRooms() {
 				axios.post('/api/room/getRooms',

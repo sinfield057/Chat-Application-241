@@ -31,6 +31,9 @@ router.post( '/login', ( req, res ) => {
 							resolved: false
 						} );
 					} else {
+						global.socket.emit( 'customEmit', {
+							message: 'welcome!'
+						})
 						res.send( {
 							data: 'User and password accepted!',
 							resolved: true
@@ -56,6 +59,7 @@ router.get( '/logout', ( req, res ) => {
 				resolved: false
 			} );
 		} else {
+			global.socket.close();
 			res.send( {
 				resolved: true
 			} );
