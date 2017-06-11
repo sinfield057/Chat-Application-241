@@ -24,7 +24,9 @@
         <v-btn  class="blue darken-1 white--text mt-3" name="login-button"  @click.native="doLogin">Login</v-btn>
         <v-btn  class="grey lighten-1 mt-3" name="register-button"  @click.native="doRegister">Register</v-btn>
 
-    <p>{{ data }}</p>
+    <v-alert error v-bind:value="true" id="alert">
+			{{data}}	
+		</v-alert> 	
   </div>
 </template>
 
@@ -52,6 +54,7 @@ export default {
   methods: {
 
     doLogin() {
+      document.getElementById('alert').style.visibility = 'visible';      
       axios.post( '/api/user/login', {
             username: this.username,
             password: this.password
@@ -95,5 +98,8 @@ export default {
   flex-direction:column;
   margin: auto;
 }
-
+#alert{
+		visibility: hidden;
+    width:40%;
+	}
 </style>
