@@ -56,7 +56,7 @@ export default {
         if (response.data.resolved) {
           this.room = response.data.data;
         } else {
-          this.data = response.data.data;
+          router.push('/');
         }
       });
     }

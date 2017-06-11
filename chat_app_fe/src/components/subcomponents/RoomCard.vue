@@ -1,18 +1,18 @@
 <template>
 	<v-card >
-		<router-link :to="availableRoom ? {path: '/'} : { path: 'roomChat/' + room.name }">
-			<v-card-row class="blue darken-1 white--text mt-3">
+		<router-link :to="availableRoom ? {path: 'main'} : { path: 'roomChat/' + room.name }">
+			<v-card-row :class="{available: availableRoom}" class="blue darken-1 white--text mt-3">
 				<v-card-title class="card-title">
 					<span class="text-xs-left headline ml-2 room-name"> {{ room.name }}</span>
 					<span class="text-xs-right caption members">({{room.users.length}} members)</span>
 				</v-card-title>
 			</v-card-row>
-			<v-card-text>
+			<v-card-text :class="{available: availableRoom}">
 				<p class ="text-xs-left subheading">{{ room.description }}</p>
 				<p class ="text-xs-right caption mb-0 ">Created at: {{ room.createdAt }}</p>
 			</v-card-text>
 		</router-link>
-		<v-card-row v-if="availableRoom">
+		<v-card-row :class="{available: availableRoom}" v-if="availableRoom" >
 			<v-btn v-if="room.admin" @click.native="requestAccessToRoom(room.name)" :disabled="~room.requests.indexOf(username) ? true : false" class="blue darken-1 white--text mt-3">
 				{{ ~room.requests.indexOf(username) ? "Waiting for request to be accepted" : "Request access" }}
 			</v-btn>
@@ -94,5 +94,8 @@ export default {
 	a {
 		text-decoration: none;
 		color: inherit;
+	}
+	.available {
+		cursor: default;
 	}
 </style>
