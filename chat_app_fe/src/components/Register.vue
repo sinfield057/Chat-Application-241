@@ -45,10 +45,14 @@
 				</v-container>
 				</v-card-text>
 				<v-btn  class="blue darken-1 white--text mt-3" name="registe-button" value ="Register" @click.native="doRegister">Register</v-btn>
-			</v-card>			
+			</v-card>	
+			<br />
+		 <v-alert error v-bind:value="true" id="alert">
+			{{data}}	
+			</v-alert> 	
 		</div>
-		<br />
-		<p>{{ data }}</p>
+		
+		
 	</div>
 </template>
 
@@ -86,6 +90,7 @@ export default {
     },
 
 		doRegister() {
+			document.getElementById('alert').style.visibility = 'visible';
 			if ( this.password == this.passwordRepeat ) {
 				axios.post( '/api/user/register', {
 					username: this.username,
@@ -121,5 +126,8 @@ export default {
     .data-register{
 		justify-content: center;
 		margin: auto;
+	}
+	#alert{
+		visibility: hidden;
 	}
 </style>
