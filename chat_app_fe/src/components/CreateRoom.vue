@@ -28,7 +28,7 @@
 			></v-text-field>		
 			<br />
 			<v-divider></v-divider>
-			<input type="checkbox" name="create-room-checkbox" v-model="isPublic" >Public room</input>
+			<v-checkbox label="Public room" v-model="isPublic" value="Public room"></checkbox>
 			<br />
 			<v-btn  class="blue darken-1 white--text mt-3" name="create-room" value ="Create Room" @click.native="createRoom">Create Room</v-btn>
 			<br />
