@@ -49,10 +49,8 @@
 			<br />
 		 <v-alert error v-bind:value="true" id="alert">
 			{{data}}	
-			</v-alert> 	
-		</div>
-		
-		
+		</v-alert> 	
+		</div>		
 	</div>
 </template>
 
