@@ -3,7 +3,7 @@
 		<v-card >
 			<v-card-row class="blue darken-1 white--text mt-3">
 				<v-card-title class="card-title">
-					<v-card-column class="text-md-center display-2 ml-2"> Create Room</v-card-column>				
+					<v-card-column class="text-md-center display-2 ml-2">Room info</v-card-column>				
 				</v-card-title>
 			</v-card-row>			
 			
@@ -30,11 +30,10 @@
 			<v-divider></v-divider>
 			<v-checkbox label="Public room" v-model="isPublic" value="Public room"></checkbox>
 			<br />
-			<v-btn  class="blue darken-1 white--text mt-3" name="create-room" value ="Create Room" @click.native="createRoom">Create Room</v-btn>
-			<br />
 			<router-link :to=" 'main' ">Back to main</router-link>
 			<v-card-text>
 		</v-card >
+		<v-btn  class="blue darken-1 white--text mt-3" name="create-room" value ="Create Room" @click.native="createRoom">Create Room</v-btn>
 	</div>
 </template>
 
