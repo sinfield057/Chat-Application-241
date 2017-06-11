@@ -42,7 +42,6 @@ export default {
           
           this.getRoom();
         } else {
-          this.data = response.data.data;
           router.push('/');
         }
       });
