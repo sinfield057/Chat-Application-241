@@ -1,32 +1,33 @@
 <template>
   <div class="home" @keyup.enter="doLogin">
-  	<img src="../assets/logo2.png" id="logo">
-
-    <h3>Chat App</h3>
-    <div class = "log_reg">
-      <v-text-field
-              name="Username"
-              label="Username"
-              value="Input text0"
-              class="input-group--focused   "
-              v-model="username"
-            > </v-text-field>
-             <v-text-field
-              name="Password"
-              type="password"
-              label="Password"
-              value="Input text0"
-              class="input-group--focused  "
-              v-model="password"
-            > </v-text-field>
+  	<div class="bg"></div>
+    <v-card class = "login-card white pb-5 elevation-20">
+      <div class = "title pa-4" >
+        <span class="black--text display-3">Chat App</span>
       </div>
-
-        <v-btn  class="blue darken-1 white--text mt-3" name="login-button"  @click.native="doLogin">Login</v-btn>
-        <v-btn  class="grey lighten-1 mt-3" name="register-button"  @click.native="doRegister">Register</v-btn>
-
-    <v-alert error v-bind:value="true" id="alert">
-			{{data}}	
-		</v-alert> 	
+      <div class = "log_reg mt-3">
+        <v-text-field
+                name="Username"
+                label="Username"
+                value="Input text0"
+                class="input-group--focused mb-0 "
+                v-model="username"
+              > </v-text-field>
+               <v-text-field
+                name="Password"
+                type="password"
+                label="Password"
+                value="Input text0"
+                class="input-group--focused mb-0 "
+                v-model="password"
+              > </v-text-field>
+      </div>
+      <v-btn  class="blue darken-1 white--text mt-1" name="login-button"  @click.native="doLogin">Login</v-btn>
+      <v-btn  class="grey lighten-1 mt-1" name="register-button"  @click.native="doRegister">Register</v-btn>
+      <v-alert error v-bind:value="true" id="alert" v-show="data.length!==0">
+  			{{data}}
+  		</v-alert>
+    </v-card>
   </div>
 </template>
 
@@ -55,7 +56,7 @@ export default {
 
     doLogin() {
       const self = this;
-      document.getElementById('alert').style.visibility = 'visible';      
+      document.getElementById('alert').style.visibility = 'visible';
       axios.post( '/api/user/login', {
             username: this.username,
             password: this.password
@@ -63,12 +64,12 @@ export default {
            .then( ( response ) => {
              this.data = response.data.data;
             if ( response.data.resolved == true ) {
-              self.$socket.emit( 'connect', this.username );            
+              self.$socket.emit( 'connect', this.username );
               self.$options.sockets.welcome = ( data ) => {
                 console.log( data );
               }
-              
-              router.push('/main');   
+
+              router.push('/main');
             }
            })
            .catch( ( err ) => {
@@ -96,16 +97,40 @@ export default {
 }
 </script>
 <style scoped>
-
-.log_reg{
-  width:30%;
-  display: flex;
-  justify-content: center;
-  flex-direction:column;
-  margin: auto;
-}
-#alert{
-		visibility: hidden;
-    width:40%;
-	}
+  .login-card{
+    max-width:50%;
+    margin:0 auto;
+    z-index: 999;
+    position: relative;
+    top:10vh;
+  }
+  .title{
+    display: flex;
+    justify-content: center;
+  }
+  .home{
+    margin-top:-10px;
+  }
+  .bg{
+    z-index: 1;
+    position: fixed;
+    left: 0;
+    right: 0;
+    background-image:url('../assets/logo2.png');
+    background-position-x: center;
+    background-position-y: 25%;
+    width: 100%;
+    height: 100%;
+  }
+  .log_reg{
+    width:50%;
+    display: flex;
+    justify-content: center;
+    flex-direction:column;
+    margin: auto;
+  }
+  #alert{
+  		visibility: hidden;
+      width:70%;
+  }
 </style>
