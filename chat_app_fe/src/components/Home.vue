@@ -1,26 +1,26 @@
 <template>
   <div class="home" @keyup.enter="doLogin">
   	<div class="bg"></div>
-    <v-card class = "login-card white pb-5 elevation-20">
-      <div class = "title pa-4" >
+    <v-card class = "login-card white py-4 elevation-20">
+      <div class = "title" >
         <span class="black--text display-3">Chat App</span>
       </div>
-      <div class = "log_reg mt-3">
+      <div class = "log_reg mt-2">
         <v-text-field
-                name="Username"
-                label="Username"
-                value="Input text0"
-                class="input-group--focused mb-0 "
-                v-model="username"
-              > </v-text-field>
-               <v-text-field
-                name="Password"
-                type="password"
-                label="Password"
-                value="Input text0"
-                class="input-group--focused mb-0 "
-                v-model="password"
-              > </v-text-field>
+          name="Username"
+          label="Username"
+          value="Input text0"
+          class="input-group "
+          v-model="username"
+        ></v-text-field>
+        <v-text-field
+          name="Password"
+          type="password"
+          label="Password"
+          value="Input text0"
+          class="input-group "
+          v-model="password"
+        ></v-text-field>
       </div>
       <v-btn  class="blue darken-1 white--text mt-1" name="login-button"  @click.native="doLogin">Login</v-btn>
       <v-btn  class="grey lighten-1 mt-1" name="register-button"  @click.native="doRegister">Register</v-btn>
