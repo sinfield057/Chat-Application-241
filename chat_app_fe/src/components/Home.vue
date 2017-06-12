@@ -61,6 +61,7 @@ export default {
             password: this.password
           })
            .then( ( response ) => {
+             this.data = response.data.data;
             if ( response.data.resolved == true ) {
               self.$socket.emit( 'connect', this.username );            
               self.$options.sockets.welcome = ( data ) => {
