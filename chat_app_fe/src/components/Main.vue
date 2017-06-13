@@ -22,7 +22,7 @@
 				<li v-for="room in moderatedRooms">
 				<room-card :room="room" :username = "username"></room-card>
 					<p v-if="room.requests.length" class ="headline pa-2 mb-0">Requests: </p>
-					<ul v-if="room.requests">
+					<ul v-if="room.requests" class = "mb-0">
 						<li v-for="request in room.requests">
 							<span class = "title">User: {{ request }}</span>
 							<v-btn @click.native="acceptRequest(room.name,request)" class="blue darken-1 white--text">Accept request</v-btn>
@@ -59,10 +59,6 @@
 			<ul id="available-rooms" v-bind:class="{ 'hide': hideAvailable }">
 				<li v-for="room in availableRooms">
 					<room-card :room="room" :username="username"></room-card>
-					<!--<button v-if="room.admin" @click="requestAccessToRoom(room.name)" :disabled="~room.requests.indexOf(username) ? true : false">
-						{{ ~room.requests.indexOf(username) ? "Waiting for request to be accepted" : "Request access" }}
-					</button>
-					<button v-else @click="joinRoom(room.name)">Join room</button>-->
 				</li>
 			</ul>
 		</div>
