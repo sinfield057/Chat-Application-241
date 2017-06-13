@@ -69,7 +69,7 @@ router.get( '/logout', ( req, res ) => {
 
 router.post( '/register', ( req, res ) => {
 	const username = req.body.username;
-	const password = req.body.password;
+	var password = req.body.password;
 
 	if (username.length && password.length) {
 			password = md5(password);
