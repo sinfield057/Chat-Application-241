@@ -1,19 +1,30 @@
 <template>
 <div class="roomChat">
-  <h3> {{ roomName }} </h3>
+<v-card  class = "title-users ">
+    <v-card-row class=" titlu blue darken-1">
+      <v-card-title class="white--text ">
+          {{ roomName }}
+      </v-card-title>
+      <v-spacer></v-spacer>
+      </v-card-row>
   <h4> Users <h4>
-  <ul v-if="room" class="roomUsers">
+  <ul v-if="room" class="roomUsers subheading">
     <li v-for="user in room.users"> {{ user }} </li>
   </ul>
   <br />
-  <h4> Requests <h5>
-  <ul v-if="room" class="roomRequests">
+  <h5> Requests <h5>
+  <ul v-if="room" class="roomRequests subheading">
     <li v-for="request in room.requests"> {{ request }} </li>
   </ul>
+  </v-card>
   <br />
   <div>
     <ul>
-      <li v-for="message in messages"> {{ message.sender }}: {{ message.message }} </li>
+      <li v-for="message in messages">
+        <message-bubble :sender="message.sender" :receiver="username" :date="message.dateSent">
+          {{ message.message }}
+        </message-bubble>
+      </li>
     </ul>
   </div>
   <input type="text" name="message-send" placeholder="Enter Message" v-model="message">
@@ -25,11 +36,16 @@
 import axios from 'axios'
 import router from '../router'
 import session from 'vue-cookie'
+import MessageBubble from './subcomponents/MessageBubble'
 
 export default {
 	name: 'roomChat',
 
   props: ['roomName'],
+
+  components: {
+    'message-bubble': MessageBubble
+  },
 
   data() {
     return {
@@ -41,7 +57,7 @@ export default {
       room: null,
       messages: [],
       currentRoom: ''
- 
+
     }
   },
 
@@ -50,8 +66,8 @@ export default {
       axios.get('/api/user/validate')
       .then((response) => {
         if (response.data.resolved) {
-          this.username = response.data.username;          
-          this.sessionValid = true;    
+          this.username = response.data.username;
+          this.sessionValid = true;
           this.getRoom();
         } else {
           router.push('/');
@@ -94,7 +110,7 @@ export default {
   mounted() {
     this.$store.watch( state => {
       return state.messages;
-    }, 
+    },
     messageList => {
       this.messages = messageList;
     })
@@ -105,6 +121,18 @@ export default {
 
 <style scoped>
 .roomUsers, .roomRequests {
+  list-style-type: none;
   padding: 0;
+}
+.title-users {
+    width:55%;
+    left:22.5%;
+}
+.titlu {
+  float:center;
+}
+ul{
+  list-style-type: none;
+  padding: 0px;
 }
 </style>
