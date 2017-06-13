@@ -20,7 +20,11 @@
   <br />
   <div>
     <ul>
-      <li v-for="message in messages"> {{ message.sender }}: {{ message.message }} </li>
+      <li v-for="message in messages">
+        <message-bubble :sender="message.sender" :receiver="username" :date="message.dateSent">
+          {{ message.message }}
+        </message-bubble>
+      </li>
     </ul>
   </div>
   <input type="text" name="message-send" placeholder="Enter Message" v-model="message">
@@ -32,11 +36,16 @@
 import axios from 'axios'
 import router from '../router'
 import session from 'vue-cookie'
+import MessageBubble from './subcomponents/MessageBubble'
 
 export default {
 	name: 'roomChat',
 
   props: ['roomName'],
+
+  components: {
+    'message-bubble': MessageBubble
+  },
 
   data() {
     return {
@@ -48,7 +57,7 @@ export default {
       room: null,
       messages: [],
       currentRoom: ''
- 
+
     }
   },
 
@@ -57,8 +66,8 @@ export default {
       axios.get('/api/user/validate')
       .then((response) => {
         if (response.data.resolved) {
-          this.username = response.data.username;          
-          this.sessionValid = true;    
+          this.username = response.data.username;
+          this.sessionValid = true;
           this.getRoom();
         } else {
           router.push('/');
@@ -101,7 +110,7 @@ export default {
   mounted() {
     this.$store.watch( state => {
       return state.messages;
-    }, 
+    },
     messageList => {
       this.messages = messageList;
     })
@@ -121,5 +130,9 @@ export default {
 }
 .titlu {
   float:center;
+}
+ul{
+  list-style-type: none;
+  padding: 0px;
 }
 </style>
