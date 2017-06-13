@@ -116,9 +116,10 @@ export default {
 	    position: fixed;
 	    left: 0;
 	    right: 0;
-	    background-image:url('../assets/logo2.png');
+	    background-image:url('../assets/login_bg.jpg');
 	    background-position-x: center;
 	    background-position-y: 25%;
+			background-size: cover;
 	    width: 100%;
 	    height: 100%;
  	}
