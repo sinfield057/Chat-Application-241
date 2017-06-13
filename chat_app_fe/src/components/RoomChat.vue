@@ -1,15 +1,22 @@
 <template>
 <div class="roomChat">
-  <h3> {{ roomName }} </h3>
+<v-card  class = "title-users ">
+    <v-card-row class=" titlu blue darken-1">
+      <v-card-title class="white--text ">
+          {{ roomName }}
+      </v-card-title>
+      <v-spacer></v-spacer>
+      </v-card-row>
   <h4> Users <h4>
-  <ul v-if="room" class="roomUsers">
+  <ul v-if="room" class="roomUsers subheading">
     <li v-for="user in room.users"> {{ user }} </li>
   </ul>
   <br />
-  <h4> Requests <h5>
-  <ul v-if="room" class="roomRequests">
+  <h5> Requests <h5>
+  <ul v-if="room" class="roomRequests subheading">
     <li v-for="request in room.requests"> {{ request }} </li>
   </ul>
+  </v-card>
   <br />
   <div>
     <ul>
@@ -105,6 +112,14 @@ export default {
 
 <style scoped>
 .roomUsers, .roomRequests {
+  list-style-type: none;
   padding: 0;
+}
+.title-users {
+    width:55%;
+    left:22.5%;
+}
+.titlu {
+  float:center;
 }
 </style>
