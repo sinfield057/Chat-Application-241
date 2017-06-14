@@ -27,20 +27,21 @@
     <main>
       <v-container>
         <div class="messages-container">
-        <div class="messages">
-          <ul>
-            <li v-for="message in messages">
-              <message-bubble :sender="message.sender" :receiver="username" :date="message.dateSent">
-                {{ message.message }}
-              </message-bubble>
-            </li>
-          </ul>
+          <div class="messages">
+            <ul>
+              <li v-for="message in messages">
+                <message-bubble :sender="message.sender" :receiver="username" :date="message.dateSent">
+                  {{ message.message }}
+                </message-bubble>
+              </li>
+            </ul>
+          </div>
         </div>
-      </div>
       <div class="send-message">
         <v-layout row wrap>
-          <v-text-field v-model="message" name="input-7-1" label="Enter message" multi-line rows=3 class="input"></v-text-field>
-          <v-btn class="blue darken-1 white--text mt-4" name="create-room" value ="Send" @click.native="sendMessage">Send</v-btn>           
+          <v-text-field v-model="message" name="input-7-1" label="Enter message" class="input"></v-text-field>
+          <v-btn class="blue darken-1 white--text mt-4" name="create-room" value ="Send"
+            @click.native="sendMessage" @keyup.enter="sendMessage">Send</v-btn>           
         </v-layout>
       </div>
       </v-container>
@@ -118,12 +119,12 @@ export default {
           router.push('/');
         }
       });
-    }
-  },
+    },
 
-  scrollToEnd() {
-    const container = this.$el.querySelector('#messages');
-    container.scrollTop = container.scrollHeight;
+    scrollToEnd() {
+      const container = this.$el.querySelector('.messages');
+      container.scrollTop = container.scrollHeight;
+    }
   },
 
   beforeMount() {
@@ -136,8 +137,12 @@ export default {
     },
     messageList => {
       this.messages = messageList;
-      // this.scrollToEnd();
+      this.scrollToEnd();
     })
+  },
+
+  ready() {
+    this.scrollToEnd();
   }
 }
 
