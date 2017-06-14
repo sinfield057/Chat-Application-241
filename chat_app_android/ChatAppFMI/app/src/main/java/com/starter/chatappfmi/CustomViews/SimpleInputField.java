@@ -42,7 +42,7 @@ public class SimpleInputField extends LinearLayout {
     private void createView(Context context) {
         mContext = context;
         LayoutInflater inflater = LayoutInflater.from(context);
-        inflater.inflate(R.layout.simple_input_field_layout, null);
+        inflater.inflate(R.layout.simple_input_field_layout, this);
 
         mUsername = (TextView) findViewById(R.id.username_label);
         mUserInput = (EditText) findViewById(R.id.username_input);

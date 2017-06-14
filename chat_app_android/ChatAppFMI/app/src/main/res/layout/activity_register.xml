@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2017 Theme Dimension, a Mobile Web America, Inc. venture - ThemeDimension.com
+  -->
+
+<RelativeLayout
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="@color/white"
+	xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<com.starter.chatappfmi.CustomViews.NavigationBar
+		android:id="@+id/register_navBar"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_alignParentTop="true"
+		android:background="@color/message_bg_color"/>
+
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_centerInParent="true"
+		android:layout_marginLeft="20dp"
+		android:layout_marginRight="20dp"
+		android:background="@color/message_bg_color">
+
+		<EditText
+			android:id="@+id/register_userName"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:hint="Username"
+			android:textColorHint="@color/black"
+			android:gravity="center"
+			android:inputType="text"
+			android:textSize="16sp"
+			android:layout_marginLeft="50dp"
+			android:layout_marginRight="50dp"
+			android:layout_marginTop="12dp"
+			android:layout_marginBottom="12dp"
+			android:layout_centerHorizontal="true"/>
+
+		<EditText
+			android:id="@+id/register_password"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_below="@+id/register_userName"
+			android:textColor="@color/black"
+			android:inputType="textPassword"
+			android:gravity="center"
+			android:textSize="16sp"
+			android:hint="Password"
+			android:layout_marginLeft="50dp"
+			android:layout_marginRight="50dp"
+			android:layout_marginTop="12dp"
+			android:layout_marginBottom="12dp"
+			android:textColorHint="@color/black"/>
+
+		<EditText
+			android:id="@+id/register_confirm"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_below="@+id/register_password"
+			android:textColor="@color/black"
+			android:inputType="textPassword"
+			android:gravity="center"
+			android:textSize="16sp"
+			android:hint="Confirm Password"
+			android:layout_marginLeft="50dp"
+			android:layout_marginRight="50dp"
+			android:layout_marginTop="12dp"
+			android:layout_marginBottom="12dp"
+			android:textColorHint="@color/black"/>
+	</RelativeLayout>
+
+	<Button
+		android:id="@+id/register_button"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="Register"
+		android:layout_margin="12dp"
+		android:background="@color/message_bg_color"
+		android:textColor="@color/black"
+		android:textSize="18sp"
+		android:textAllCaps="false"
+		android:layout_alignParentBottom="true"
+		android:layout_centerHorizontal="true"/>
+
+</RelativeLayout>

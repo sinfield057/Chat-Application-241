@@ -28,6 +28,7 @@ public final class ConstantUtils {
     public static final String LOGIN_URL = BASE_URL + "login?email=%s&pass=%s";
     public static final String REGISTER_URL = BASE_URL + "register";
     public static final String RESET_URL = BASE_URL + "reset?email=%s";
+    public static final String ROOM_URL = BASE_URL + "room?userId=%s&roomId=%s";
 
     public static final String LAUNCHER_DATA = BASE_URL + "launcher_data";
     //endregion

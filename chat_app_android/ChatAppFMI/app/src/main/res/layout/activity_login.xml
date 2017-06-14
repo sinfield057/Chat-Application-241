@@ -18,14 +18,14 @@
         android:id="@+id/logo_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"/>
+        android:layout_above="@+id/simple_input_field_view"
+        android:layout_centerHorizontal="true"/>
 
     <com.starter.chatappfmi.CustomViews.SimpleInputField
         android:id="@+id/simple_input_field_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/logo_view"
+        android:layout_centerInParent="true"
         android:layout_margin="4dp"/>
 
     <Button
@@ -33,23 +33,23 @@
         android:minWidth="150dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/simple_input_field_view"
         android:layout_centerHorizontal="true"
         android:layout_margin="4dp"
         android:text="Login"
         android:textAlignment="center"
         android:textSize="18sp"
-        android:textAllCaps="false"/>
+        android:textAllCaps="false"
+		android:layout_above="@+id/register_link"/>
 
     <TextView
         android:id="@+id/register_link"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/login_button"
         android:layout_centerHorizontal="true"
         android:layout_margin="4dp"
         android:text="@string/register_link_msg"
-        android:textSize="15sp"/>
+        android:textSize="15sp"
+		android:layout_alignParentBottom="true"/>
 
 
 </RelativeLayout>
