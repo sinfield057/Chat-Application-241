@@ -1,35 +1,52 @@
 <template>
-<div class="roomChat">
-<v-card  class = "title-users ">
-    <v-card-row class=" titlu blue darken-1">
-      <v-card-title class="white--text ">
-          {{ roomName }}
-      </v-card-title>
-      <v-spacer></v-spacer>
-      </v-card-row>
-  <h4> Users <h4>
-  <ul v-if="room" class="roomUsers subheading">
-    <li v-for="user in room.users"> {{ user }} </li>
-  </ul>
-  <br />
-  <h5> Requests <h5>
-  <ul v-if="room" class="roomRequests subheading">
-    <li v-for="request in room.requests"> {{ request }} </li>
-  </ul>
-  </v-card>
-  <br />
-  <div>
-    <ul>
-      <li v-for="message in messages">
-        <message-bubble :sender="message.sender" :receiver="username" :date="message.dateSent">
-          {{ message.message }}
-        </message-bubble>
-      </li>
-    </ul>
+  <div class="roomChat">
+    <v-navigation-drawer permanent light>
+      <v-list class="pa-0">
+        <v-list-item>
+          <v-list-tile>Users</v-list-tile>
+          <v-divider></v-divider>
+          <v-list dense class="pt-0">
+            <v-list-item v-for="user in room.users">
+              <v-list-tile> {{ user }} </v-list-tile>
+            </v-list-item>
+          </v-list>
+        </v-list-item>
+        <v-list-tile v-if="room.requests.length"> Requests </v-list-tile>
+        <v-divider v-if="room.requests.length"></v-divider>
+          <v-list dense class="pt-0">
+            <v-list-item v-for="request in room.requests">
+              <v-list-tile> {{ request }} </v-list-tile>
+            </v-list-item>
+          </v-list>
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
+    <v-toolbar class="blue">
+      <v-toolbar-title> {{ room.name }} </v-toolbar-title>
+    </v-toolbar>
+    <main>
+      <v-container>
+        <div class="messages-container">
+          <div class="messages">
+            <ul>
+              <li v-for="message in messages">
+                <message-bubble :sender="message.sender" :receiver="username" :date="message.dateSent">
+                  {{ message.message }}
+                </message-bubble>
+              </li>
+            </ul>
+          </div>
+        </div>
+      <div class="send-message">
+        <v-layout row wrap>
+          <v-text-field v-model="message" name="input-7-1" label="Enter message" class="input"></v-text-field>
+          <v-btn class="blue darken-1 white--text mt-4" name="create-room" value ="Send"
+            @click.native="sendMessage" @keyup.enter="sendMessage">Send</v-btn>           
+        </v-layout>
+      </div>
+      </v-container>
+    </main>
   </div>
-  <input type="text" name="message-send" placeholder="Enter Message" v-model="message">
-  <button v-on:click="sendMessage()">Send</button>
-</div>
 </template>
 
 <script>
@@ -76,14 +93,16 @@ export default {
     },
 
     sendMessage() {
-      const payload = {
-        sender: this.username,
-        message: this.message,
-        dateSent: Date.now(),
-        room: this.roomName
+      if (this.message.length) {
+        const payload = {
+          sender: this.username,
+          message: this.message,
+          dateSent: Date.now(),
+          room: this.roomName
+        };
+        this.$socket.emit( 'sendMessage', payload );
+        this.message = '';
       }
-      this.$socket.emit( 'sendMessage', payload );
-      this.message = '';
     },
 
     getRoom() {
@@ -100,6 +119,11 @@ export default {
           router.push('/');
         }
       });
+    },
+
+    scrollToEnd() {
+      const container = this.$el.querySelector('.messages');
+      container.scrollTop = container.scrollHeight;
     }
   },
 
@@ -113,13 +137,33 @@ export default {
     },
     messageList => {
       this.messages = messageList;
+      this.scrollToEnd();
     })
+  },
+
+  ready() {
+    this.scrollToEnd();
   }
 }
 
 </script>
 
 <style scoped>
+.messages-container {
+  position: fixed;
+  height: 750px;
+}
+
+.messages {
+  height: 100%;
+  overflow-y: auto;
+}
+
+.send-message {
+  position: fixed;
+  bottom: 0;
+}
+
 .roomUsers, .roomRequests {
   list-style-type: none;
   padding: 0;
@@ -134,5 +178,9 @@ export default {
 ul{
   list-style-type: none;
   padding: 0px;
+}
+
+.input {
+  width: 500px;
 }
 </style>
