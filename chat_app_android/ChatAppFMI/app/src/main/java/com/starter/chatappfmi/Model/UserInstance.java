@@ -6,6 +6,7 @@ package com.starter.chatappfmi.Model;
 
 import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -19,6 +20,8 @@ public class UserInstance {
     private String mEmail;
     private String mPhone;
     private String mPassword;
+    private int[] mRoomsOwned;
+    private int[] mRoomsJoined;
 
     public static UserInstance getInstance() {
         if(mInstance == null) {
@@ -31,6 +34,19 @@ public class UserInstance {
     public void instantiateFromJsonObject(JSONObject object) {
         try {
             mId = object.getInt("id");
+            mUserName = object.getString("name");
+
+            JSONArray rooms = object.getJSONArray("roomsOwned");
+            mRoomsOwned = new int[rooms.length()];
+            for(int i = 0; i < rooms.length(); i++) {
+                mRoomsOwned[i] = rooms.getInt(i);
+            }
+
+            rooms = object.getJSONArray("roomsJoined");
+            mRoomsJoined = new int[rooms.length()];
+            for(int i = 0; i < rooms.length(); i++) {
+                mRoomsJoined[i] = rooms.getInt(i);
+            }
         } catch (JSONException e) {
             Log.e(TAG, "Error parsing from JSON: " + e.getLocalizedMessage() );
         }
@@ -58,6 +74,15 @@ public class UserInstance {
         return mPassword;
     }
 
+    public boolean getStatus(int roomId) {
+        for (int room : mRoomsOwned) {
+            if (room == roomId) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     //endregion
 

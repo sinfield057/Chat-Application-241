@@ -9,27 +9,43 @@
     android:layout_height="match_parent">
 
     <com.starter.chatappfmi.CustomViews.NavigationBar
-        android:id="@+id/nav_bar_view"
+        android:id="@+id/main_navBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"/>
 
-    <ScrollView
+    <LinearLayout
+        android:layout_margin="12dp"
+        android:id="@+id/main_labels"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="1">
+
+        <TextView
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Rooms"
+            android:textSize="12sp"
+            android:textColor="@color/black"/>
+
+        <TextView
+            android:id="@+id/label_rooms_count_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="(8 Results)"
+            android:textSize="12sp"
+            android:textColor="@color/black"/>
+
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/room_list_layout"
+        android:layout_below="@+id/main_labels"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <LinearLayout
-            android:id="@+id/room_list_layout"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="4dp"
-            android:paddingBottom="4dp"
-            android:paddingEnd="8dp"
-            android:paddingStart="8dp">
-
-        </LinearLayout>
-
-    </ScrollView>
+    </ListView>
 
 </RelativeLayout>

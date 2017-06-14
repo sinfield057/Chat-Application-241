@@ -34,14 +34,12 @@ public class LauncherActivity extends AppCompatActivity implements NetworkListen
             public void run() {
                 mLogoView = (LogoView) findViewById(R.id.logo_view);
 
-                NetworkManager.getInstance().loadLauncherData();
+                NetworkManager.getInstance()
+                        .setNetworkListener(LauncherActivity.this)
+                        .loadLauncherData();
 
             }
         }, ConstantUtils.DEMO_WAIT);
-
-        Intent goToMainScreen = new Intent(this, LoginActivity.class);
-        startActivity(goToMainScreen);
-        finish();
     }
 
     //region CALLBACKS
@@ -68,6 +66,10 @@ public class LauncherActivity extends AppCompatActivity implements NetworkListen
                 Log.e(TAG, "Error retrieving data: " + e.getLocalizedMessage() );
             }
         }
+
+        Intent goToMainScreen = new Intent(LauncherActivity.this, LoginActivity.class);
+        startActivity(goToMainScreen);
+        finish();
     }
 
     @Override
