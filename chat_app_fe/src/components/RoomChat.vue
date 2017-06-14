@@ -1,35 +1,47 @@
 <template>
-<div class="roomChat">
-<v-card  class = "title-users ">
-    <v-card-row class=" titlu blue darken-1">
-      <v-card-title class="white--text ">
-          {{ roomName }}
-      </v-card-title>
-      <v-spacer></v-spacer>
-      </v-card-row>
-  <h4> Users <h4>
-  <ul v-if="room" class="roomUsers subheading">
-    <li v-for="user in room.users"> {{ user }} </li>
-  </ul>
-  <br />
-  <h5> Requests <h5>
-  <ul v-if="room" class="roomRequests subheading">
-    <li v-for="request in room.requests"> {{ request }} </li>
-  </ul>
-  </v-card>
-  <br />
-  <div>
-    <ul>
-      <li v-for="message in messages">
-        <message-bubble :sender="message.sender" :receiver="username" :date="message.dateSent">
-          {{ message.message }}
-        </message-bubble>
-      </li>
-    </ul>
+  <div class="roomChat">
+    <v-navigation-drawer permanent light>
+      <v-list class="pa-0">
+        <v-list-item>
+          <v-list-tile>Users</v-list-tile>
+          <v-divider></v-divider>
+          <v-list dense class="pt-0">
+            <v-list-item v-for="user in room.users">
+              <v-list-tile> {{ user }} </v-list-tile>
+            </v-list-item>
+          </v-list>
+        </v-list-item>
+        <v-list-tile v-if="room.requests.length"> Requests </v-list-tile>
+        <v-divider v-if="room.requests.length"></v-divider>
+          <v-list dense class="pt-0">
+            <v-list-item v-for="request in room.requests">
+              <v-list-tile> {{ request }} </v-list-tile>
+            </v-list-item>
+          </v-list>
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
+    <v-toolbar class="blue">
+      <v-toolbar-title> {{ room.name }} </v-toolbar-title>
+    </v-toolbar>
+    <main>
+      <v-container fluid>
+        <div class="messages-container">
+          <ul>
+            <li v-for="message in messages">
+              <message-bubble :sender="message.sender" :receiver="username" :date="message.dateSent">
+                {{ message.message }}
+              </message-bubble>
+            </li>
+          </ul>
+        </div>
+        <div class="send-message">
+          <input type="text" name="message-send" placeholder="Enter Message" v-model="message">
+          <button v-on:click="sendMessage()">Send</button>
+        </div>
+      </v-container>
+    </main>
   </div>
-  <input type="text" name="message-send" placeholder="Enter Message" v-model="message">
-  <button v-on:click="sendMessage()">Send</button>
-</div>
 </template>
 
 <script>
@@ -103,6 +115,11 @@ export default {
     }
   },
 
+  scrollToEnd() {
+    const container = this.$el.querySelector('#messages-container');
+    container.scrollTop = container.scrollHeight;
+  },
+
   beforeMount() {
 		this.getData();
 	},
@@ -113,6 +130,7 @@ export default {
     },
     messageList => {
       this.messages = messageList;
+      // this.scrollToEnd();
     })
   }
 }
@@ -120,6 +138,15 @@ export default {
 </script>
 
 <style scoped>
+.messages-container {
+  overflow-y: auto;
+}
+
+.send-message {
+  position: fixed;
+  bottom: 0;
+}
+
 .roomUsers, .roomRequests {
   list-style-type: none;
   padding: 0;
