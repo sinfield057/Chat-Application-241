@@ -154,11 +154,10 @@ export default {
 .messages-container {
   position: fixed;
   height: 750px;
-  width: 750px;
 }
 
 .messages {
-  height: 60%;
+  height: 70vh;
   overflow-y: auto;
 }
 
