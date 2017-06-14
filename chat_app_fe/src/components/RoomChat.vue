@@ -25,8 +25,9 @@
       <v-toolbar-title> {{ room.name }} </v-toolbar-title>
     </v-toolbar>
     <main>
-      <v-container fluid>
+      <v-container>
         <div class="messages-container">
+        <div class="messages">
           <ul>
             <li v-for="message in messages">
               <message-bubble :sender="message.sender" :receiver="username" :date="message.dateSent">
@@ -35,10 +36,13 @@
             </li>
           </ul>
         </div>
-        <div class="send-message">
-          <input type="text" name="message-send" placeholder="Enter Message" v-model="message">
-          <button v-on:click="sendMessage()">Send</button>
-        </div>
+      </div>
+      <div class="send-message">
+        <v-layout row wrap>
+          <v-text-field v-model="message" name="input-7-1" label="Enter message" multi-line rows=3 class="input"></v-text-field>
+          <v-btn class="blue darken-1 white--text mt-4" name="create-room" value ="Send" @click.native="sendMessage">Send</v-btn>           
+        </v-layout>
+      </div>
       </v-container>
     </main>
   </div>
@@ -88,14 +92,16 @@ export default {
     },
 
     sendMessage() {
-      const payload = {
-        sender: this.username,
-        message: this.message,
-        dateSent: Date.now(),
-        room: this.roomName
+      if (this.message.length) {
+        const payload = {
+          sender: this.username,
+          message: this.message,
+          dateSent: Date.now(),
+          room: this.roomName
+        };
+        this.$socket.emit( 'sendMessage', payload );
+        this.message = '';
       }
-      this.$socket.emit( 'sendMessage', payload );
-      this.message = '';
     },
 
     getRoom() {
@@ -116,7 +122,7 @@ export default {
   },
 
   scrollToEnd() {
-    const container = this.$el.querySelector('#messages-container');
+    const container = this.$el.querySelector('#messages');
     container.scrollTop = container.scrollHeight;
   },
 
@@ -139,6 +145,12 @@ export default {
 
 <style scoped>
 .messages-container {
+  position: fixed;
+  height: 750px;
+}
+
+.messages {
+  height: 100%;
   overflow-y: auto;
 }
 
@@ -161,5 +173,9 @@ export default {
 ul{
   list-style-type: none;
   padding: 0px;
+}
+
+.input {
+  width: 500px;
 }
 </style>
