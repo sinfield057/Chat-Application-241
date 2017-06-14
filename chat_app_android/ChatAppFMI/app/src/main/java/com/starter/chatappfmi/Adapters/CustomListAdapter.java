@@ -13,13 +13,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.starter.chatappfmi.Model.Room;
 import com.starter.chatappfmi.R;
 
 import java.util.ArrayList;
 
-public class CustomListAdapter extends ArrayAdapter<Room> {
+public class CustomListAdapter extends ArrayAdapter<Room> implements NetworkListener {
 
     private static final String TAG = "CustomListAdapter";
 
@@ -69,5 +70,21 @@ public class CustomListAdapter extends ArrayAdapter<Room> {
         }
 
         return convertView;
+    }
+
+    public void updateRoomList() {
+        NetworkManager.getInstance().setNetworkListener(this).getRoomList();
+    }
+
+    @Override
+    public void onSuccess(NetworkManager.ResponseData response, NetworkManager.ResponseType responseType) {
+        mSourceList = RoomManager.getInstance().getRooms();
+        this.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onFailure(NetworkManager.ResponseData error, NetworkManager.ResponseType responseType) {
+        Toast.makeText(mContext, "An error occurred", Toast.LENGTH_SHORT).show();
+        Toast.makeText(mContext, "Check internet connection", Toast.LENGTH_LONG).show();
     }
 }
