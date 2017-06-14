@@ -73,7 +73,7 @@ export default {
             }
            })
            .catch( ( err ) => {
-            this.data = 'Error: ' + err;
+            this.data = err;
            });
     },
 
