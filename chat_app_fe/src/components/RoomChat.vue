@@ -26,7 +26,7 @@
     </v-toolbar>
     <main>
       <v-container>
-        <div class="messages-container">
+        <div v-if="room.messages.length" class="messages-container">
           <div class="messages">
             <ul>
               <li v-for="message in messages">
@@ -123,7 +123,10 @@ export default {
 
     scrollToEnd() {
       const container = this.$el.querySelector('.messages');
-      container.scrollTop = container.scrollHeight;
+
+      if (container) {
+        container.scrollTop = container.scrollHeight;        
+      }
     }
   },
 
@@ -152,6 +155,7 @@ export default {
 .messages-container {
   position: fixed;
   height: 750px;
+  width: 750px;
 }
 
 .messages {

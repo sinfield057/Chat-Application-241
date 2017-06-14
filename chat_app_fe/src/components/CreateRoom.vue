@@ -16,7 +16,7 @@
 				v-model="name"								
 			></v-text-field>
 			<v-divider></v-divider>
-			<br />	
+			<br />
 				<v-text-field
 				name="Room Description"
 				label ="Room Description"
