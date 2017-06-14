@@ -16,9 +16,11 @@
   <ul v-if="room" class="roomRequests subheading">
     <li v-for="request in room.requests"> {{ request }} </li>
   </ul>
+   <input type="text" name="message-send" placeholder="Enter Message" v-model="message">
+  <button v-on:click="sendMessage()">Send</button>
   </v-card>
   <br />
-  <div>
+  <div class="mesaje">
     <ul>
       <li v-for="message in messages">
         <message-bubble :sender="message.sender" :receiver="username" :date="message.dateSent">
@@ -27,8 +29,7 @@
       </li>
     </ul>
   </div>
-  <input type="text" name="message-send" placeholder="Enter Message" v-model="message">
-  <button v-on:click="sendMessage()">Send</button>
+  
 </div>
 </template>
 
@@ -125,14 +126,20 @@ export default {
   padding: 0;
 }
 .title-users {
-    width:55%;
-    left:22.5%;
+    width:35%;
+    float: left;
+    position:fixed;
 }
-.titlu {
-  float:center;
+.send_message{
+  position: fixed;
 }
+
 ul{
   list-style-type: none;
   padding: 0px;
+}
+.mesaje{
+  float: right;
+  width:65%;
 }
 </style>
