@@ -40,7 +40,7 @@
       <div class="send-message" @keyup.enter="sendMessage">
         <v-layout row wrap>
           <v-text-field v-model="message" name="input-7-1" label="Enter message" class="input"></v-text-field>
-          <v-btn class="blue darken-1 white--text mt-4" name="create-room" value ="Send" @click.native="sendMessage">Send</v-btn>           
+          <v-btn class="blue darken-1 white--text mt-4" name="create-room" value ="Send" @click.native="sendMessage">Send</v-btn>
         </v-layout>
       </div>
       </v-container>
@@ -124,7 +124,7 @@ export default {
       const container = this.$el.querySelector('.messages');
 
       if (container) {
-        container.scrollTop = container.scrollHeight;        
+        container.scrollTop = container.scrollHeight;
       }
     }
   },
@@ -158,7 +158,7 @@ export default {
 }
 
 .messages {
-  height: 100%;
+  height: 60%;
   overflow-y: auto;
 }
 
