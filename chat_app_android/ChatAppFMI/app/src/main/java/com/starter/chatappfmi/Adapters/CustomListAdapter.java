@@ -2,7 +2,7 @@
  * Copyright (c) 2017 Theme Dimension, a Mobile Web America, Inc. venture - ThemeDimension.com
  */
 
-package com.starter.chatappfmi.Controllers;
+package com.starter.chatappfmi.Adapters;
 
 import android.content.Context;
 import android.support.annotation.LayoutRes;
@@ -15,6 +15,9 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.starter.chatappfmi.Controllers.NetworkListener;
+import com.starter.chatappfmi.Controllers.NetworkManager;
+import com.starter.chatappfmi.Controllers.RoomManager;
 import com.starter.chatappfmi.Model.Room;
 import com.starter.chatappfmi.R;
 

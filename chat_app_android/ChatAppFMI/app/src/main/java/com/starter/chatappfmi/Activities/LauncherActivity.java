@@ -35,7 +35,7 @@ public class LauncherActivity extends AppCompatActivity implements NetworkListen
                 mLogoView = (LogoView) findViewById(R.id.logo_view);
 
                 NetworkManager.getInstance()
-                        .setContext(LauncherActivity.this)
+                        .setNetworkListener(LauncherActivity.this)
                         .loadLauncherData();
 
             }

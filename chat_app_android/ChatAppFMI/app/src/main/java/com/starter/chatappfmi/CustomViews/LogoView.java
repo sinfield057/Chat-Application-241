@@ -46,7 +46,7 @@ public class LogoView extends LinearLayout {
     private void createView(Context context) {
         mContext = context;
         LayoutInflater inflater = LayoutInflater.from(context);
-        inflater.inflate(R.layout.logo_layout, null);
+        inflater.inflate(R.layout.logo_layout, this);
 
         mAppLabel = (TextView) findViewById(R.id.app_name);
         mAppLogo = (ImageView) findViewById(R.id.app_logo);

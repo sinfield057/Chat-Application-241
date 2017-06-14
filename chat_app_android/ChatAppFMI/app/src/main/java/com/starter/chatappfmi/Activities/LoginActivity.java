@@ -19,7 +19,6 @@ import com.starter.chatappfmi.Controllers.NetworkManager;
 import com.starter.chatappfmi.CustomViews.LogoView;
 import com.starter.chatappfmi.CustomViews.NavigationBar;
 import com.starter.chatappfmi.CustomViews.SimpleInputField;
-import com.starter.chatappfmi.Model.UserInstance;
 import com.starter.chatappfmi.R;
 
 import org.json.JSONException;
@@ -55,7 +54,8 @@ public class LoginActivity extends AppCompatActivity implements NetworkListener 
 
     private void init() {
         mNavigationBar.setTitle(TAG);
-        mNavigationBar.setButtonVisibility(View.INVISIBLE);
+        mNavigationBar.setMenuButtonVisibility(View.INVISIBLE);
+        mNavigationBar.setDropdownButtonVisibility(View.INVISIBLE);
 
         mLogoView.setTeam(NetworkStatus.TEAM_NAME);
         mLogoView.setLogoResource(NetworkStatus.LOGO_URL);
@@ -99,8 +99,8 @@ public class LoginActivity extends AppCompatActivity implements NetworkListener 
         JSONObject jsonObject;
         switch (responseCode) {
             case NetworkStatus.SUCCESS:
-                jsonObject = (JSONObject) response.getResponse();
-                UserInstance.getInstance().instantiateFromJsonObject(jsonObject);
+//                jsonObject = (JSONObject) response.getResponse();
+//                UserInstance.getInstance().instantiateFromJsonObject(jsonObject);
 
                 Intent toMain = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(toMain);

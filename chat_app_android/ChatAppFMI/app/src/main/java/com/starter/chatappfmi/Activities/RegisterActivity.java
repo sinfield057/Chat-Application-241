@@ -36,11 +36,12 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         mUserNameED = (EditText) findViewById(R.id.register_userName);
         mPasED = (EditText) findViewById(R.id.register_password);
         mConfPassED = (EditText) findViewById(R.id.register_confirm);
-        mLoginButton = (Button) findViewById(R.id.login_button);
+        mLoginButton = (Button) findViewById(R.id.register_button);
 
-        mNavigationBar.setButtonVisibility(View.INVISIBLE);
+        mNavigationBar.setMenuButtonVisibility(View.INVISIBLE);
+        mNavigationBar.setDropdownButtonVisibility(View.INVISIBLE);
         mNavigationBar.setTitle(TAG);
-        mNavigationBar.setButtonListener(this);
+//        mNavigationBar.setButtonListener(this, NavigationBar.BURGER_MENU);
         mLoginButton.setOnClickListener(this);
     }
 
@@ -75,7 +76,12 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onFailure(NetworkManager.ResponseData error, NetworkManager.ResponseType responseType) {
-        Toast.makeText(RegisterActivity.this, "An error occurred", Toast.LENGTH_SHORT).show();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(RegisterActivity.this, "An error occurred", Toast.LENGTH_SHORT).show();
+            }
+        });
         Log.e(TAG, "code: " + error.getCode() + " Msg: " + error.getDescription() );
     }
 }

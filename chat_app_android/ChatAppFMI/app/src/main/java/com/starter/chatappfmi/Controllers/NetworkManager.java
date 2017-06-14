@@ -4,12 +4,15 @@
 
 package com.starter.chatappfmi.Controllers;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.starter.chatappfmi.CommonUtils.ConstantUtils;
 import com.starter.chatappfmi.CommonUtils.NetworkStatus;
+import com.starter.chatappfmi.Model.Room;
+import com.starter.chatappfmi.Model.UserInstance;
 import com.starter.chatappfmi.R;
 
 import org.json.JSONArray;
@@ -20,6 +23,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Locale;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -38,15 +42,15 @@ public class NetworkManager {
         private int mCode;
         private String mDescription;
 
-        public void setResponse(T response) {
+        void setResponse(T response) {
             mResponse = response;
         }
 
-        public void setCode(int code) {
+        void setCode(int code) {
             mCode = code;
         }
 
-        public void setDescription(String description) {
+        void setDescription(String description) {
             mDescription = description;
         }
 
@@ -65,11 +69,12 @@ public class NetworkManager {
 
     public enum ResponseType {
         //TODO maybe add more responseTypes
-        LAUNCHER_DATA, USER, ROOM_RETRIEVAL, ERROR
+        LAUNCHER_DATA, USER, ROOM_RETRIEVAL, ROOM_CONNECTION, ERROR
     }
     //endregion
 
     //region GLOBALS
+    @SuppressLint("StaticFieldLeak")
     private static NetworkManager mInstance = new NetworkManager();
     private OkHttpClient mClient = new OkHttpClient();
 
@@ -93,11 +98,6 @@ public class NetworkManager {
     public NetworkManager setNetworkListener(NetworkListener listener) {
         mCallback = listener;
         return this;
-    }
-
-    public NetworkManager setContext(Context context) {
-        mContext = context;
-        return mInstance;
     }
 
     //region LAUNCHER_DATA REQUESTS
@@ -231,7 +231,7 @@ public class NetworkManager {
 
     private void liveLogin(String email, String password) {
         RequestBody body = new FormBody.Builder()
-                .add("email", email)
+                .add("username", email)
                 .add("password", password)
                 .build();
 
@@ -285,7 +285,7 @@ public class NetworkManager {
 
     private void liveRegister(String userName, String password) {
         RequestBody body = new FormBody.Builder()
-                .add("user", userName)
+                .add("username", userName)
                 .add("password", password)
                 .build();
 
@@ -297,7 +297,7 @@ public class NetworkManager {
         mClient.newCall(request).enqueue(
                 new Callback() {
                     @Override
-                    public void onFailure(Call call, IOException e) {
+                    public void onFailure(@NonNull Call call, @NonNull IOException e) {
                         ResponseData responseData = new ResponseData();
                         responseData.setCode(400);
                         responseData.setDescription(e.getLocalizedMessage());
@@ -306,7 +306,7 @@ public class NetworkManager {
                     }
 
                     @Override
-                    public void onResponse(Call call, Response response) throws IOException {
+                    public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                         int code = response.code();
                         ResponseData responseData = new ResponseData();
                         responseData.setCode(code);
@@ -332,6 +332,7 @@ public class NetworkManager {
     public void getRoomList() {
         if(ConstantUtils.DEMO_FLAG) {
             //TODO implement DEMO response
+            Log.e(TAG, "getRoomList: No Demo Available in current version" );
         } else {
             liveRoomList();
         }
@@ -344,7 +345,7 @@ public class NetworkManager {
                         .build()
         ).enqueue(new Callback() {
             @Override
-            public void onFailure(Call call, IOException e) {
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 ResponseData<Error> responseData = new ResponseData<Error>();
                 responseData.setCode(NetworkStatus.CONNECTION_ERROR);
                 responseData.setDescription("Unable to connect to server. Check Internet connection");
@@ -354,7 +355,7 @@ public class NetworkManager {
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 try {
                     JSONObject jsonResponse = new JSONObject(response.body().string());
                     JSONArray array = jsonResponse.getJSONArray("rooms");
@@ -381,4 +382,81 @@ public class NetworkManager {
         });
     }
     //endregion
+
+    //region ROOM CONNECTION
+    public void connect(int roomId) {
+        if(ConstantUtils.DEMO_FLAG) {
+            connectDemo(roomId, UserInstance.getInstance().getId());
+            return;
+        }
+
+        Room room = new Room(-1, "", "", "");
+        for(Room r: RoomManager.getInstance().getRooms()) {
+            if(r.getId() == roomId) {
+                room = r;
+                break;
+            }
+        }
+        connectLive(room.getTitle(), UserInstance.getInstance().getUserName());
+    }
+
+    private void connectDemo(int roomId, int userId) {
+        //TDU - To Do in Update
+    }
+
+    private void connectLive(String roomName, String username) {
+        mClient.newCall(
+                new Request.Builder()
+                        .url(String.format(Locale.US, ConstantUtils.ROOM_URL, username, roomName))
+                        .build()
+        ).enqueue(
+                new Callback() {
+                    @Override
+                    public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                        ResponseData responseData = new ResponseData();
+                        responseData.setCode(NetworkStatus.CONNECTION_ERROR);
+                        responseData.setDescription("Error connecting to server");
+
+                        mCallback.onFailure(responseData, ResponseType.ROOM_CONNECTION);
+                    }
+
+                    @Override
+                    public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                        int code = response.code();
+                        ResponseData responseData = new ResponseData();
+                        responseData.setCode(code);
+
+                        switch (code) {
+                            case NetworkStatus.SUCCESS:
+                                try {
+                                    JSONObject jsonData = new JSONObject(response.body().string());
+                                    JSONArray array = jsonData.getJSONArray("users");
+                                    String[] users = new String[array.length()];
+                                    for(int i = 0; i < array.length(); i++) {
+                                        users[i] = array.getString(i);
+                                    }
+
+                                    responseData.setDescription("Success"); //TODO get socket to requested room
+                                    responseData.setResponse(users);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+
+                                mCallback.onSuccess(responseData, ResponseType.ROOM_CONNECTION);
+                                break;
+
+                            default:
+                                responseData.setDescription("Error");
+
+                                mCallback.onFailure(responseData, ResponseType.ROOM_CONNECTION);
+                        }
+                    }
+                }
+        );
+    }
+    //endregion
+
+    public void removeUser(int roomId, int userId) {
+        //TODO behaviour
+    }
 }
